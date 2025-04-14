@@ -12,5 +12,8 @@ public class CatExample {
 
         System.out.println(cat == animal); // true 반환
 
+        /*
+        자동타입변환은 부모클래스 뿐만 아니라 상속계층에서 자신의 상위 타입이라면 자동타입변환 이 가능하다
+         */
     }
 }
