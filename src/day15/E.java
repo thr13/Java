@@ -34,7 +34,7 @@ public class E {
             //field1 = 10;
             //method1();
 
-            // 바깥 클래스 E 의 정ㅈ거 필드와 메소드 사용
+            // 바깥 클래스 E 의 정적 필드와 메소드 사용
             field2 = 10;
             method2();
         }
