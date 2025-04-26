@@ -1,6 +1,6 @@
 package src.day17;
 
-public class ExcetpionHnadlingExample2 {
+public class ExceptionHandlingExample2 {
     public static void main(String[] args) {
         try {
             Class.forName("java.lang.String");
