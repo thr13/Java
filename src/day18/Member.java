@@ -6,13 +6,15 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
-//@NoArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 public class Member {
-    private final String id; // @NoArgsConstructor 가 있다면 final 필드가 초기화 되지 않을 경우 컴파일 에러 발생한다
+    private String id;
     @NonNull
     String name;
     private int age;
+
+
 
     /*
     public Member(String id) {
