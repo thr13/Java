@@ -1,0 +1,40 @@
+롬복(Lombok) 은 JDK 에 포함된 표준 라이브러리는 아니지만 편리한 자동코드생성 라이브러리이다
+DTO(Data Transfer Object) 클래스를 작성할떄 Getter, Setter, hashCode(), equals(), toString() 메소드 등을 어노테이션(@) 을 이용해서 쉽게 생성하게 해준다
+레코드와 차이점은 롬복은 필드가 final 이 아니고 Getter 와 Setter 가 get~~~(또는 is~~~) 와 set~~~ 형태로 생성된다
+
+@NonNull
+    - 해당 필드를 null 체크를해서 null 값이 될 수 없음을 명시함
+    - final 필드와 달리 @NonNull 필드는 null 이 아닌 다른 값으로 Setter 를 통해서 필드값을 변경할 수 있다
+
+@Getter
+    - Getter 메소드 생성 (boolean 타입이면 is~~~, 이외에는 get~~~)
+
+@Setter
+    - Setter 메소드 생성 (set~~~)
+
+@EqualsAndHashCode
+    - hashCode() 와 equals() 메소드를 자동생성
+
+@ToString
+    - toString() 메소드를 자동생성
+
+@NoArgsConstructor
+    - 매개변수가 없는 기본 생성자를 자동생성한다, final 필드가 초기화되지 않은 경우 컴파일 오류가 발생할 수 있다
+
+@AllArgsConstructor
+    - 모든 필드를 초기화시키는 생성자를 자동생성한다
+
+@RequiredArgsConstructor
+    - 기본적으로 매개변수가 없는 기본생성자를 포함하고 final 필드 또는 @NonNull 이 붙은 필드가 있다면 이 필드들만 초기화시키는 생성자를 자동생성한다
+
+@Data
+    - @RequiredArgsConstructor, @Getter, @Setter, @EqualsAndHashCode, @ToString 어노테이션들을 합쳐진 것과 동일한 효과를 낸다
+    - 불필요한 기능 탑재에 주의: 특정 필드에 대해서 접근제어자, Getter, Setter 를 변하거나 toString()에서 특정 필드를 제외할려면 @Data 를 사용안하는게 좋다
+    - 불변 객체일 경우 Setter 가 필요없는데 @Data 는 Setter 를 포함하므로 객체의 안정성을 해친다
+
+@Value
+    - @Data 와 유사하지만 모든 필드를 private final 로 만들고 Setter 를 생성하지 않는다
+    - 불변 객체를 만들때 유용함
+
+@Builder
+    - 빌더 패턴을 자동으로 생성함
