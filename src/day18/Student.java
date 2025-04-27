@@ -17,11 +17,11 @@ public class Student {
         return name;
     }
 
-    @Override
-    public int hashCode() {
-        int hashCode = no + name.hashCode();
-        return hashCode;
-    }
+//    @Override
+//    public int hashCode() {
+//        int hashCode = no + name.hashCode();
+//        return hashCode;
+//    }
 
     @Override
     public boolean equals(Object obj) {
