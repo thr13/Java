@@ -2,6 +2,7 @@ package src.day18;
 
 public class EqualsExample {
     public static void main(String[] args) {
+        /*
         Member obj1 = new Member("blue");
         Member obj2 = new Member("blue");
         Member obj3 = new Member("red");
@@ -17,6 +18,6 @@ public class EqualsExample {
         } else {
             System.out.println("obj1 과 obj3 는 동등하지 않습니다");
         }
-
+        */
     }
 }

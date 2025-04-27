@@ -1,8 +1,22 @@
 package src.day18;
 
-public class Member {
-    public String id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Member {
+    private String id;
+    @NonNull
+    String name;
+    private int age;
+
+
+
+    /*
     public Member(String id) {
         this.id = id;
     }
@@ -16,4 +30,5 @@ public class Member {
         }
         return false;
     }
+    */
 }
