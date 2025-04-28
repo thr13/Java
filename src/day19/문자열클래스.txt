@@ -27,3 +27,21 @@ byte 배열을 문자열로 변환할때 String 생성자를 사용할 수 있�
     String str = new String(byte[] bytes);
 2. 특정 문자셋으로 byte 배열을 디코딩해서 String 객체로 생성
     String str = new String(byte[] bytes, String charsetName);
+
+한글 1 자를 UTF-8 로 인코딩 (String 객체를 byte 배열로 변환) 시 3바이트가 되고
+한글 1 자를 EUC-KR 로 인코딩 (String 객체를 byte 배열로 변환) 시 2바이트가 된다
+
+String 은 내부 문자열을 수정할 수 없는데다가 다른 문자열 결합시 새로운 String 객체를 생성하고 그 객체를 참조하게 된다 (기존 String 객체는 버려지고 나중에 가비지 컬렉터가 수거함)
+따라서 문자열 변경 작업은 StringBuilder 타입을 사용하는게 좋다
+
+StringBuilder 는 내부 버퍼(데이터를 저장하는 메모리) 에 문자열을 저장하고 그 안에서 추가, 수정, 삭제 작업을 하도록 설계되어있음
+StringBuilder 메소드 몇개
+append("문자열") 끝부분에 문자열을 추가함
+insert(int 시작위치, "문자열") 문자열을 지정위치에 추가함
+delete(int 시작위치, int 끝위치) 시작위치부터 끝위치까지의 문자열 일부를 삭제함
+replace(int 시작위치, int 끝위치, "문자열") 시작위치부터 끝위치까지의 문자열을 새로운 문자열로 대체함
+toString() 완성된 문자열을 String 타입으로 리턴함
+
+StringBuilder 메소드의 반환형이 StringBuilder 일 경우
+멤버접근연산자(.) 을 사용하여 연속적으로 다른 메소드를 호출할 수 있는 메소드 체이닝(chaining) 패턴을 사용할 수 있다
+예) StringBuilder().append("DEF").insert(0,"ABC").delete(3, 4).toString()
