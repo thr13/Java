@@ -1,0 +1,29 @@
+JAVA 에서 문자열 관련 클래스는 String, StringBuilder, StringBuffer, StringTokenizer 등 이 존재한다
+
+String
+    - 불변클래스이므로 한번 생성된 String 객체는 변경할 수 없다
+    - 문자열리터럴("") 또는 new String() 생성자를 통해서 객체가 생성됨
+    - 문자열 연산(+)시, 매번 새로운 String 객체가 생성되므로 효율이 나쁘다
+
+StringBuilder
+    - 가변클래이므로 문자열의 내용을 변경할 수 있다
+    - 문자열 추가 append(), 삭제 delete(), deleteCharAt(), 삽입 insert(), 치환 replace() 등 메서드가 제공되어 문자열 조작에 효율적이다
+    - 단일 스레드 환경에서 StringBuffer 보다 약간 더 좋음
+
+StringBuffer
+    - 가변클래스이자 StringBuilder 와 거의 동일한 기능을 제공함
+    - 스레드 안전(Thread Safe) 함
+    - 다중 스레드 환경에서 데이터 무결성을 보장함
+    - 스레드 안전성 때문에 단일 스레드 환경에서 StringBuilder 보다 약간의 성능 저하가 존재함
+
+StringTokenizer
+    - 구분자로 연결된 문자열을 구분자 기준으로 토큰(token) 단위로 분리하는데 사용됨
+    - hasMoreTokens() 메서드로 다음 토큰이 있는지 확인, nextToken() 메서드로 다음 토큰을 얻을 수 있음
+    - 정규표현식을 사용하는 String.split() 메서드가 등장하면서 사용 빈도가 줄어드는 추세
+
+JAVA 에서 문자열 리터럴은 자동으로 String 객체로 생성되지만 String 클래스의 생성자를 이용해서 직접 객체를 생성할 수 있다
+byte 배열을 문자열로 변환할때 String 생성자를 사용할 수 있다
+1. 기본 문자셋으로 byte 배열을 디코딩해서 String 객체로 생성
+    String str = new String(byte[] bytes);
+2. 특정 문자셋으로 byte 배열을 디코딩해서 String 객체로 생성
+    String str = new String(byte[] bytes, String charsetName);
