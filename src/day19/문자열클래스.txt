@@ -1,0 +1,59 @@
+JAVA 에서 문자열 관련 클래스는 String, StringBuilder, StringBuffer, StringTokenizer 등 이 존재한다
+
+String
+    - 불변클래스이므로 한번 생성된 String 객체는 변경할 수 없다
+    - 문자열리터럴("") 또는 new String() 생성자를 통해서 객체가 생성됨
+    - 문자열 연산(+)시, 매번 새로운 String 객체가 생성되므로 효율이 나쁘다
+
+StringBuilder
+    - 가변클래이므로 문자열의 내용을 변경할 수 있다
+    - 문자열 추가 append(), 삭제 delete(), deleteCharAt(), 삽입 insert(), 치환 replace() 등 메서드가 제공되어 문자열 조작에 효율적이다
+    - 단일 스레드 환경에서 StringBuffer 보다 약간 더 좋음
+
+StringBuffer
+    - 가변클래스이자 StringBuilder 와 거의 동일한 기능을 제공함
+    - 스레드 안전(Thread Safe) 함
+    - 다중 스레드 환경에서 데이터 무결성을 보장함
+    - 스레드 안전성 때문에 단일 스레드 환경에서 StringBuilder 보다 약간의 성능 저하가 존재함
+
+StringTokenizer
+    - 구분자로 연결된 문자열을 구분자 기준으로 토큰(token) 단위로 분리하는데 사용됨
+    - hasMoreTokens() 메서드로 다음 토큰이 있는지 확인, nextToken() 메서드로 다음 토큰을 얻을 수 있음
+    - 정규표현식을 사용하는 String.split() 메서드가 등장하면서 사용 빈도가 줄어드는 추세
+
+JAVA 에서 문자열 리터럴은 자동으로 String 객체로 생성되지만 String 클래스의 생성자를 이용해서 직접 객체를 생성할 수 있다
+byte 배열을 문자열로 변환할때 String 생성자를 사용할 수 있다
+1. 기본 문자셋으로 byte 배열을 디코딩해서 String 객체로 생성
+    String str = new String(byte[] bytes);
+2. 특정 문자셋으로 byte 배열을 디코딩해서 String 객체로 생성
+    String str = new String(byte[] bytes, String charsetName);
+
+한글 1 자를 UTF-8 로 인코딩 (String 객체를 byte 배열로 변환) 시 3바이트가 되고
+한글 1 자를 EUC-KR 로 인코딩 (String 객체를 byte 배열로 변환) 시 2바이트가 된다
+
+String 은 내부 문자열을 수정할 수 없는데다가 다른 문자열 결합시 새로운 String 객체를 생성하고 그 객체를 참조하게 된다 (기존 String 객체는 버려지고 나중에 가비지 컬렉터가 수거함)
+따라서 문자열 변경 작업은 StringBuilder 타입을 사용하는게 좋다
+
+StringBuilder 는 내부 버퍼(데이터를 저장하는 메모리) 에 문자열을 저장하고 그 안에서 추가, 수정, 삭제 작업을 하도록 설계되어있음
+StringBuilder 메소드 몇개
+append("문자열"): 끝부분에 문자열을 추가함
+insert(int 시작위치, "문자열"): 문자열을 지정위치에 추가함
+delete(int 시작위치, int 끝위치): 시작위치부터 끝위치까지의 문자열 일부를 삭제함
+replace(int 시작위치, int 끝위치, "문자열"): 시작위치부터 끝위치까지의 문자열을 새로운 문자열로 대체함
+toString(): 완성된 문자열을 String 타입으로 리턴함
+
+StringBuilder 메소드의 반환형이 StringBuilder 일 경우
+멤버접근연산자(.) 을 사용하여 연속적으로 다른 메소드를 호출할 수 있는 메소드 체이닝(chaining) 패턴을 사용할 수 있다
+예) StringBuilder().append("DEF").insert(0,"ABC").delete(3, 4).toString()
+
+문자열이 구분자(delimiter)로 연결된 경우, 구분자를 기준으로 문자열을 분리할려면 String 의 split() 메소드를 이용하거나 java.util 패키지의 StringTokenizer 클래스를 이용할 수 있다
+split() 메소드는 정규표현식을 사용해서 문자열을 구분하고, StringTokenizer 는 문자를 사용해서 구분한다는 차이점이 있다
+
+만약 여러 종류가 아닌 한 종류의 구분자만 사용해서 문자열을 분리할경우 StringTokenizer 을 사용할 수도 있다
+StringTokenizer 객체를 생성할때, 매개값으로 전체 문자열과 구분자를 줄 수 있다 (구분자 생략시 공백이 기본 구분자가 된다)
+StringTokenizer 메소드 몇개
+countTokens(): 분리할 수 있는 문자열의 총 갯수를 int 형으로 반환함
+hasMoreTokens(): 남아 있는 문자열이 존재하는지 여부를 boolean 형으로 반환함
+nextToken(): 다음 분리된 문자열(토큰) 하나를 String 형으로 반환함 (더 이상 가져올 문자열이 없다면 NoSuchElementException 예외 발생)
+
+일반적으로 nextToken() 메서드를 사용하기 전에 hasMoreTokens() 메소드로 가져올 문자열이 있는지 먼저 조사하는게 좋다
