@@ -36,12 +36,24 @@ String 은 내부 문자열을 수정할 수 없는데다가 다른 문자열 �
 
 StringBuilder 는 내부 버퍼(데이터를 저장하는 메모리) 에 문자열을 저장하고 그 안에서 추가, 수정, 삭제 작업을 하도록 설계되어있음
 StringBuilder 메소드 몇개
-append("문자열") 끝부분에 문자열을 추가함
-insert(int 시작위치, "문자열") 문자열을 지정위치에 추가함
-delete(int 시작위치, int 끝위치) 시작위치부터 끝위치까지의 문자열 일부를 삭제함
-replace(int 시작위치, int 끝위치, "문자열") 시작위치부터 끝위치까지의 문자열을 새로운 문자열로 대체함
-toString() 완성된 문자열을 String 타입으로 리턴함
+append("문자열"): 끝부분에 문자열을 추가함
+insert(int 시작위치, "문자열"): 문자열을 지정위치에 추가함
+delete(int 시작위치, int 끝위치): 시작위치부터 끝위치까지의 문자열 일부를 삭제함
+replace(int 시작위치, int 끝위치, "문자열"): 시작위치부터 끝위치까지의 문자열을 새로운 문자열로 대체함
+toString(): 완성된 문자열을 String 타입으로 리턴함
 
 StringBuilder 메소드의 반환형이 StringBuilder 일 경우
 멤버접근연산자(.) 을 사용하여 연속적으로 다른 메소드를 호출할 수 있는 메소드 체이닝(chaining) 패턴을 사용할 수 있다
 예) StringBuilder().append("DEF").insert(0,"ABC").delete(3, 4).toString()
+
+문자열이 구분자(delimiter)로 연결된 경우, 구분자를 기준으로 문자열을 분리할려면 String 의 split() 메소드를 이용하거나 java.util 패키지의 StringTokenizer 클래스를 이용할 수 있다
+split() 메소드는 정규표현식을 사용해서 문자열을 구분하고, StringTokenizer 는 문자를 사용해서 구분한다는 차이점이 있다
+
+만약 여러 종류가 아닌 한 종류의 구분자만 사용해서 문자열을 분리할경우 StringTokenizer 을 사용할 수도 있다
+StringTokenizer 객체를 생성할때, 매개값으로 전체 문자열과 구분자를 줄 수 있다 (구분자 생략시 공백이 기본 구분자가 된다)
+StringTokenizer 메소드 몇개
+countTokens(): 분리할 수 있는 문자열의 총 갯수를 int 형으로 반환함
+hasMoreTokens(): 남아 있는 문자열이 존재하는지 여부를 boolean 형으로 반환함
+nextToken(): 다음 분리된 문자열(토큰) 하나를 String 형으로 반환함 (더 이상 가져올 문자열이 없다면 NoSuchElementException 예외 발생)
+
+일반적으로 nextToken() 메서드를 사용하기 전에 hasMoreTokens() 메소드로 가져올 문자열이 있는지 먼저 조사하는게 좋다
