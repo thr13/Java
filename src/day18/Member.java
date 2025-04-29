@@ -1,5 +1,5 @@
 package src.day18;
-
+/*
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,5 +30,6 @@ public class Member {
         }
         return false;
     }
-    */
+
 }
+ */
