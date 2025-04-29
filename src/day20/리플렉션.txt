@@ -15,8 +15,30 @@ Class clazz = Class.forName("패키지...클래스이름");
 Class clazz = 객체참조변수.getClass();
 
 ----------------------------------------------------------------------
-
 <패키지와 타입(클래스, 인터페이스) 이름 정보 얻기>
-Package getPackage() - 패키지 정보 반환
-String getSimpleName() - 패키지를 제외한 타입 이름 반환
-String getName() - 패키지를 포함한 전체 타입 이름 반환
+반환타입 메소드이름()
+
+Package getPackage() - 패키지 정보 반환(클래스를 제외한 패키지이름만)
+String getSimpleName() - 패키지를 제외한 타입 이름 (클래스이름) 반환
+String getName() - 패키지를 포함한 전체 타입 이름 (클래스경로.클래스이름) 반환
+
+<멤버(생성자, 필드, 메소드) 정보 얻기>
+아래의 클래스(Constructor, Field, Method)들은 모두 java.lang.reflect 패키지에 존재한다 각각 생성자, 필드, 메소드에 대한 선언부 정보를 제공한다
+
+반환타입 메소드이름()
+
+Constructor[] getDeclaredConstructors() - 생성자 정보 반환
+Field[] getDeclaredFields() - 필드 정보 반환
+Method[] getDeclaredMethods() - 메소드 정보 반환
+
+Class[] Constructor 타입객체.getParameterTypes() - 매개변수 타입을 class 객체들의 배열로 반환
+----------------------------------------------------------------------
+
+<리소스 경로 얻기>
+Class 객체는 클래스 파일(*.class) 의 경로 정보를 가지고 있기 때문에 상대 경로에 있는 다른 리소스 파일(이미지, XML, Property 파일)의 정보를 얻을 수 있다
+
+URL getResource(String name) - 리소스 파일의 URL 리턴 (경로 정보가 담긴 URL 객체 반환)
+InputStream getResourceAsStream(String name) - 리소스 파일의 InputStream 리턴 (파일의 내용을 읽을 수 있는 InputStream 객체 반환)
+
+URL getPath() - 절대 경로값을 반환함
+
