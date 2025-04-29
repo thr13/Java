@@ -1,0 +1,78 @@
+JAVA 에서 java.util 패키지의 Date, Calendar 클래스를 이용하여 컴퓨터의 날짜 및 시각을 읽을 수 있다
+그리고 java.time 패캐지의 LocalDateTime 등 클래스를 이용해서 날짜와 시간을 조작할 수 있다
+
+Date 클래스:
+날짜 정보를 표현하는 클래스, 객체 간에 날짜 정보를 주고받을 때 사용됨
+Date() 생성자는 JVM 이 실행되고 있는 컴퓨터(운영체제)의 현재 날짜와 시간 정보를 읽음
+.toString() 메서드를 이용하여 현재 날짜를 문자열로 얻을 수 있다
+만약 날짜정보를 원하는 형식의 문자열로 얻을려면 SimpleDateFormat 클래스와 함께 사용해야한다
+예)
+Date now = new Date();
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+String str = sdf.format(now);
+
+Calendar 클래스:
+달력을 표현하는 추상 클래스, 날짜와 시간을 계산하는 방법은 문화에 따라 다르기 때문에 특정 역법(날짜와 시간을 매기는 방법)에 따르는 달력은 자식 클래스에서 구현하도록 되어있다
+특별한 역법이 아닌경우 직접 자식 클래스를 만들 필요는 없고 Calendar 클래스의 정적 메소드인 getInstance() 메소드를 이용하여
+JVM 이 실행되고 있는 컴퓨터(운영체제)에 설정되어 있는 시간대(TimeZone)을 기준으로 Calendar 하위 객체를 얻을 수 있다
+예) Calendar now = Calendar.getInstance();
+
+Calendar 클래스의 .get() 메소드를 잉요하여 날짜와 시간 정보를 얻을 수 있다
+.get() 메소드의 매개값으로 Calendar 클래스에 정의된 상수를 넣으면 해당 상수가 의미하는 값을 반환한다
+Calendar.YEAR 년도를 리턴
+Calendar.MONTH 월을 리턴
+DAY_OF_MONTH 일을 리턴
+DAY_OF_WEEK 요일을 리턴
+Calendar.AM_PM 오전/오후를 리턴
+Calendar.HOUR 시간을 리턴
+Calendar.MINUTE 분을 리턴
+Calendar.SECOND 초를 리턴
+
+Calendar 클래스의 .getInstance() 메서드의 매개변수로 TimeZone 객체를 이용하여 시차가 적용된 다른 나라의 시간을 얻을 수 있다
+예)
+TimeZone timeZone = TimeZone.getTimeZone("America/Los_Angeles");
+Calendar now = Calendar.getInstance(timeZone);
+
+TimeZone.getAvailableIDs() 메소드를 이용하여 TimeZone 의 시간대 ID 형식(나라/도시)를 String 배열 타입으로 얻을 수 있다
+
+LocalDateTime 클래스:
+java.time 패키지의 LocalDateTime 클래스는 날짜와 시간을 조작하는데 사용된다
+
+LocalDateTime 클래스의 일부 메소드(매개변수)
+minusYears(long) - 년 의 뺄셈 연산
+plusYears(long) - 년 의 덧셈 연산
+
+minusMonths(long) - 월 의 뺄셈 연산
+plusMonths(long) - 월 의 덧셈 연산
+
+minusWeeks(long) - 주 의 뺄셈 연산
+plusWeeks(long) - 주 의 덧셈 연산
+
+minusDays(long) - 일 의 뺄셈 연산
+plusDays(long) - 일 의 덧셈 연산
+
+minusHours(long) - 시 의 뺄셈 연산
+plusHours(long) - 시 의 덧셈 연산
+
+minusMinutes(long) - 분 의 뺄셈 연산
+plusMinutes(long) - 분 의 덧셈 연산
+
+minusSeconds(long) - 초 의 뺄셈 연산
+minusSeconds(long) - 초 의 덧셈 연산
+
+minusNanos(long) - 나노초 의 뺼셈 연산
+plusNanos(long) - 나노초 의 덧셈 연산
+
+LocalDateTime 객체는 DateTImeFormatter 클래스의 .ofPattern("형식") 메소드를 이용하여 날짜와 시간을 임으의 문자열 패턴으로 변환할 수 있다
+예)
+DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd a HH:mm:ss");
+
+LocalDateTime 클래스로 날짜와 시간 비교시 사용되는 메소드(매개변수)
+isAfter(other) - 시간을 기준으로 이후 날짜인지 여부
+isBefore(other) - 시간을 기준으로 이전 날짜인지 여부
+isEqual(other) - 시간을 기준으로 동일한 날짜인지 여부
+until(other, unit) - 주어진 날짜 또는 시간의 차이를 long 타입으로 반환함
+
+특정 날짜와 시간을 LocalDateTime 객체로 얻을려면 .of(year, month, dayOfMonth, hour, minute, second) 메서드를 사용하면 된다
+예) 2021년 1월 1일 0시 0분 0초
+LocalDateTime.of(2021, 1, 1, 0, 0, 0);

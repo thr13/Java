@@ -1,5 +1,6 @@
 package src.day16;
 
+/*
 // 외부 라이브러리 추가
 import pack1.A;
 import pack2.B;
@@ -14,3 +15,4 @@ public class Main {
         b.method();
     }
 }
+*/
