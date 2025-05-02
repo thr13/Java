@@ -1,0 +1,39 @@
+<작업 스레드 생성 방법1 - 클래스 생성 후 매개값으로 전달>
+
+class 클래스이름 implements Runnable {
+    @Override
+    public void run() {
+        //스레드가 실행할 코드
+    }
+}
+
+Thread thread = new Thread(클래스이름)
+----------------------------------------------------------------------
+<작업 스레드 생성 방법2 - 익명클래스 사용>
+Thread thread = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        //스레드가 실행할 코드
+    }
+})
+----------------------------------------------------------------------
+<작업 스레드 생성 방법3 - Thread 의 자식클래스로 생성>
+public class 작업스레드이름 extends Thread {
+    @Override
+        public void run() {
+            //스레드가 실행할 코드
+        }
+}
+
+// (업캐스팅) 스레드 객체 생성
+Thread thread = new 작업스레드이름()
+----------------------------------------------------------------------
+<작업 스레드 생성 방법4 - Thread 의 익명 자식 객체 사용>
+Thread thread = new Thread() {
+    @Override
+    public void run() {
+        //스레드가 실행할 코드
+    }
+};
+thread.start();
+----------------------------------------------------------------------
