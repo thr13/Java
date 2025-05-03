@@ -13,8 +13,9 @@ public class Calculator {
         try {
             Thread.sleep(2000); // 2초 동안 정지 상태가 된다
         } catch (InterruptedException e) {
-            System.out.println(Thread.currentThread().getName() + ": " + this.getMemory()); // 해당 스레드 이름과 필드 값 출력
+
         }
+        System.out.println(Thread.currentThread().getName() + ": " + this.getMemory()); // 해당 스레드 이름과 필드 값 출력
     }
 
     // 메소드 내부에 동기화 블럭 설정
@@ -25,8 +26,9 @@ public class Calculator {
             try {
                 Thread.sleep(2000); // 2초 동안 정지 상태가 된다
             } catch (InterruptedException e) {
-                System.out.println(Thread.currentThread().getName() + ": " + this.getMemory()); // 해당 스레드 이름과 필드 값 출력
+
             }
+            System.out.println(Thread.currentThread().getName() + ": " + this.getMemory()); // 해당 스레드 이름과 필드 값 출력
         }
     }
 }
