@@ -1,0 +1,7 @@
+LinkedList 는 java.util 패키지에 존재함
+
+ArrayList 는 내부 배열에 객체를 저장하지만 LinkedList 는 인접한 객체를 체인처럼 연결해서 관리한다
+
+LinkedList 는 특정 위치에서 객체를 삽입, 삭제한 경우 그 위치의 압, 뒤 링크만 변경하면 된다
+그러므로 삽입, 삭제가 빈번한 경우 LinkedList 가 ArrayList  보다 더 효율적이다
+
