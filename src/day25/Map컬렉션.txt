@@ -1,0 +1,54 @@
+Map 컬렉션도 List, Set 과 마찬가지로 java.util 패키지에 존재한다
+Map 컬렉션은 HashMap, Hashtable, LinkedHashMap, Properties, TreeMap 등이 있다
+
+Map 컬렉션은 키(Key)와 값(Value) 로 구성된 엔트리(Entry) 객체를 저장한다
+여기서 key 와 value 는 모두 객체이다
+key 는 중복 저장할 수 없지만 value 는 중복 저장할 수 있다
+만약 기존에 저장된 키와 동일한 키로 값을 저장할 경우, 기존 값은 없어지고 새로운 값으로 대체된다
+----------------------------------------------------------------------------------------------------
+<Map 컬렉션의 공통 메소드>
+K: 키 타입
+V: 값 타입
+
+V put(K key, V value): 주어진 키와 값을 객체에 추가함 저장이 된 경우 값을 리턴
+V get(Object key): 주어진 키에 해당되는 값을 리턴
+boolean containsKey(Object key), boolean containsValue(Object value): 주어진 키, 값이 있는지 여부를 리턴
+boolean isEmpty(): 컬렉션이 비어 있는지 여부를 리턴
+Set<K> keySet(): 모든 키를 Set 객체에 담아서 리턴
+Set<Map.Entry<K, V>> entrySet(): 키와 값의 쌍으로 구성된 모든 Map.Entry 객체를 Set 에 담아서 Set 객체를 리턴
+int size(): 저장된 키의 총 갯수를 리턴
+Collection<V> value(): 저장된 모든 값을 Collection 에 담아서 Collection 객체를 리턴
+void clear(): 모든 Map.Entry(키와 값)을 삭제함
+V remove(Object key): 주어진 키와 일치하는 Map.Entry(키와 값) 삭제하고 삭제가 된 경우 값을 리턴
+----------------------------------------------------------------------------------------------------
+<HashMap>
+HashMap 은 key 로 사용할 객체가 hashCode() 메소드의 리턴값과 같다 또한, equals() 메소드가 true 를 반환할 경우, 동일한 키로 간주하고 중복 저장을 허용하지 않는다
+(즉, hashCode() 메소드와 반환값이 다른 경우 다른 키로 취급, hashCode() 메소드의 반환값이 같을 경우 equals() 메소드가 같은키인지 여부를 결정함)
+
+HashMap 은 키타입과 값타입이 각각 다른 객체를 가질 수 있다
+모든 타입의 키와 객체를 저장할 수 있는 코드로서 Map map = new HashMap(); 이 존재하지만 사용할 경우는 거의 없다
+
+HashMap 은 비동기 메소드로 멀티 스레드 환경에서 동시에 메소드가 호출되므로 경합이 발생한다
+이 경우 메소드 호출 결과가 하나만 저장될 수 있어 손실이 발생한다
+----------------------------------------------------------------------------------------------------
+<Hashtable>
+Hashtable 은 hashMap 와 내부 구조가 동일하나 Hashtable 은 동기화된 메소드로 구성되어 있다 (멀티 스레드가 동시에 Hashtable 의 메소드를 실행할 수 없음)
+그러므로 멀티 스레드 환경에서 안전하게 객체를 추가/삭제 할 수 있다
+
+Hashtable 은 동기화된 메소드이므로 한 번에 하나의 스레드만 실행될 수 있어 경합이 발생하지 않는다
+----------------------------------------------------------------------------------------------------
+<Properties>
+Properties 는 Hashtable 의 자식 클래스이다
+hashtable 의 특징을 그대로 가지고 있으나 properties 는 키와 값을 String 타입으로 제한한 컬렉션이다
+properties 는 주로 확장자가 .properties 인 프로퍼티 파일을 읽을 때 사용한다
+
+프로퍼티 파일은 키와 값이 = 기호로 연결된 텍스트 파일이다
+일반 텍스트 파일과 달리 ISO 8859-1 문자셋으로 저장되며 한글인 경우 \u+유니코드로 표현되어 저장된다
+
+Properties 객체를 생성하고 load() 메소드로 프로퍼티 파일의 내용을 메모리로 로드할 수 있다
+예)
+Properties properties = new Properties();
+properties.load(~~~.class.getResourceAsStream("database.properties"));
+
+일반적으로 프로퍼티 파일은 클래스 파일(*.class)와 함께 저장된다 그러므로 클래스 파일을 기준으로 상대 경로를 이용해서 읽는게 편리하다
+----------------------------------------------------------------------------------------------------
