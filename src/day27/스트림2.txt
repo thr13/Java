@@ -66,3 +66,20 @@ Predicate<T>, IntPredicate, LongPredicate, DoublePredicate 가 있다 (각각의
 Predicate<T> 는 람다식으로 표현이 가능하다
 T -> { ... return true } 또는 T -> true // return 문만 있을 경우 중괄호와 return 키워드 생략 가능
 ----------------------------------------------------------------------------------------------------
+<매핑(요소변환)>
+스트림에서 매핑(mapping)은 스트림의 요소를 다른 요소로 변환하는 중간 처리 기능이다
+매핑 메소드는 mapXxx(), asDoubleStream(), asLongStream(), boxed(), flatMapXxx() 등이 있다
+
+mapXxx() 메소드는 스트림 요소를 다른 요소로 변환한 후 새로운 스트림을 생성하여 반환한다
+
+map(Function<T, R>) 은 T 타입 요소를 R 타입 요소로 변환하고 Stream<R> 을 반환한다
+mapToXxx(ToXxxFunction<T>)는 T 타입 요소를 Xxx 타입으로 변환한다
+mapToObj(XxxFunction<U>)는 Xxx 타입 요소를 U 타입으로 변환한다
+mapToXxx(YyyToXxxFunction)는 Yyy 타입 요소를 Xxx 타입으로 변환한다
+
+매개변수의 타입은 Function 은 함수형 인터페이스로 매개값을 리턴값으로 매핑하는 추상메소드 applyXxx() 를 가지고 있다
+Function<T, R> 을 람다식으로 표현하면 T -> { ...return R; } 또는 T -> R; 이 있다
+
+asLongStream()은 기본 타입간 변환 (int -> long)
+asDoubleStream()은 기본 타입간 변환 (int -> double, long -> double)
+boxed()는 기본 타입을 래퍼(Wrapper) 객체로 변환 (int -> Integer, long -> Long, double -> Double)
