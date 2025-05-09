@@ -83,3 +83,10 @@ Function<T, R> 을 람다식으로 표현하면 T -> { ...return R; } 또는 T -
 asLongStream()은 기본 타입간 변환 (int -> long)
 asDoubleStream()은 기본 타입간 변환 (int -> double, long -> double)
 boxed()는 기본 타입을 래퍼(Wrapper) 객체로 변환 (int -> Integer, long -> Long, double -> Double)
+----------------------------------------------------------------------------------------------------
+<요소를 복수의 요소로 매핑(변환)>
+flatMapXxx() 메소드는 하나의 요소를 복수 개의 요소로 변환한후 새로운 스트림을 생성해서 반환한다
+
+flatMap(Function<T, Stream<R>>)은 T 타입을 Stream<R> 으로 변환한다
+flatMap(XxxFunction<XxxStream>) 은 Xxx 타입을 XxxStream 으로 변환한다
+flatMapToXxx(Function<T.XxxStream>)은 T 타입을 XxxStream 으로 변환한다
