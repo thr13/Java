@@ -21,3 +21,13 @@ forEach(Consumer<? super T> action): 스트림의 각 요소에 대해 제공된
 
 * 매개타입인 Consumer 는 함수형 인터페이스로 추상 메소드로 void accept(T t) 를 가지고 있다
 ** Consumer<? super T> 를 람다식으로 표현하면 T -> {...} 또는 T -> 단일 실행문; 과 같다
+----------------------------------------------------------------------------------------------------
+<매칭>
+매칭은 요소들이 특정 조건을 만족하는지 여부를 조사하는 최종 처리 기능이다
+매칭의 메소드는 allMatch(), anyMatch(), noneMatch() 메소드가 있다
+
+allMatch(Predicate<T> predicate): 모든 요소가 만족하는지 여부를 반환함
+anyMatch(Predicate<T> predicate): 최소 요소 하나가 만족하는지 여부를 반환함
+noneMatch(Predicate<T> predicate): 모든 요소가 만족하지 않는지 여부를 반환함
+
+
