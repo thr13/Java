@@ -29,5 +29,20 @@ forEach(Consumer<? super T> action): 스트림의 각 요소에 대해 제공된
 allMatch(Predicate<T> predicate): 모든 요소가 만족하는지 여부를 반환함
 anyMatch(Predicate<T> predicate): 최소 요소 하나가 만족하는지 여부를 반환함
 noneMatch(Predicate<T> predicate): 모든 요소가 만족하지 않는지 여부를 반환함
+----------------------------------------------------------------------------------------------------
+<요소 집계>
+집계(Aggregate)는 최종 처리 기능으로, 요소들을 가공해서 카운팅, 합계, 평균값, 최대값, 최소값 등 하나의 값으로 산출하는 것을 의미한다
+즉, 대량의 데이터를 가공해서 하나의 값으로 축소하는 리덕션(Reduction) 이라고 볼 수 있다
 
+스틑림이 제공하는 기본 집계 메소드는 아래와 같다
+count(): 요소의 개수를 long 타입으로 반환
+findFirst(): 첫 번째 요소를 OptionalXxx 타입으로 반환
+max(Comparator<T>): 최대 요소를 Optional<T> 타입으로 반환
+max(): 최대 요소를 OptionalXxx 타입으로 반환
+min(Comparator<T>): 최소 요소를 Optional<T> 타입으로 반환
+min(): 최소 요소를 OptionalXxx 타입으로 반환
+average(): 요소들의 평균을 OptionalDouble 타입으로 반환함
+sum(): 요소들의 총합을 int, long, double 등 타입으로 반환함
 
+* OptionalXxx 클래스들은 get(), getAsXxx() 메소드를 호추랗여 최종값을 얻을 수 있다
+----------------------------------------------------------------------------------------------------
