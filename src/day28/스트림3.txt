@@ -46,3 +46,15 @@ sum(): 요소들의 총합을 int, long, double 등 타입으로 반환함
 
 * OptionalXxx 클래스들은 get(), getAsXxx() 메소드를 호추랗여 최종값을 얻을 수 있다
 ----------------------------------------------------------------------------------------------------
+<요소 집계2>
+스트림은 기본 집계 메소드를 제외하고 집계 결과물을 만들 수 있는 reduce() 메소드도 제공한다
+
+reduce(BinaryOperator<T> accumulator): Optional<T> 타입을 반환한다
+reduce(T identity, BinaryOperator<T> accumulator): T 타입을 반환한다
+
+* 매개값 BinaryOperator 는 두 개의 매개값을 바당서 하나의 값을 리턴하는 apply() 메소드를 가지고 있는 함수형 인터페이스
+
+reduce() 메소드는 요소가 없을 경우 예외가 발생하지만 identity 매개값을 준 경우
+요소가 없을 때 identity 매개값을 디폴트 값을 반환한다
+
+
