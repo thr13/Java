@@ -56,5 +56,25 @@ reduce(T identity, BinaryOperator<T> accumulator): T 타입을 반환한다
 
 reduce() 메소드는 요소가 없을 경우 예외가 발생하지만 identity 매개값을 준 경우
 요소가 없을 때 identity 매개값을 디폴트 값을 반환한다
+----------------------------------------------------------------------------------------------------
+<요소 수집>
+스트림은 요소들을 필터링 또는 매핑한 후 요소들을 수집하는 최종 처리 메소드인 collect() 를 제공한다
+collect() 메소드는 필요한 요소만 컬렉션에 담을 수 있고 요소들을 그룹핑한 후 집계도 할 수 있다
 
+collect(Collector<T,A,R> collector): 필터링 또는 매핑된 요소들을 새 컬렉션에 수집하고 이 컬렉션을 리턴한다
+* 매개값 Collector 는 어떤 요소를 어떤 컬렉션에 수집할 것인지를 결정함
+** T 는 스트림의 요소 타입, A 는 수집 과정에서 중간 결과를 저장하는 누적자(accumulator)의 타입, R 은 요소가 저장된 컬렉션 타입이다
+T 요소를 A 누적기에 R 에 저장한다는 의미
 
+Collector 의 구현 객체는 Collectors 클래스의 정적 메소드로 얻을 수 있다
+
+toList(): T 를 List 에 저장해서 반환함(Collector<T, ?, List<T>>)
+toSet(): T 를 Set 에 저장해서 반환함(Collector<T, ?, Set<T>>)
+toMap(Function<T,K> keyMapper, Function<T,U> valueMapper): T 를 K 와 U 로 매핑하여 K 를 키로 U 를 값으로 Map 에 저장하여 반환함(Collector<T, ?, Map<K,U>>)
+
+Collector 의 A (누적기) 자리에 ? 로 되어 있는데 이것은 Collector 이 List, Set, Map 컬렉션에 요소를 저장하는 방법을 알고 있어 별도의 누적기가 필요 없기 떄문이다
+
+Java 16 버전부터는 요소 스트림에서 List 컬렉션을 얻을 수 있다 (스트림에서 바로 toList() 메소드 사용)
+예)
+List<Student> maleList = totalList.stream().filter(s->s.getSex().equals("남")).toList();
+----------------------------------------------------------------------------------------------------
