@@ -1,0 +1,40 @@
+<보조 스트림>
+보조 스트림은 다른 스트림과 연결되어 기능을 제공하는 스트림을 의미한다
+보조 스트림은 자체적으로 입출력을 수행할 수 없다
+그렇기 떄문에 입출력 소스로부터 직접 생성된 입출력 스트림에 연결해서 사용해ㅑㅇ한다
+
+<출발지>-입력스트림-보조스트림-프로그램-보조스트림-출력스트림-<도착지>
+
+입출력 스트림에 보조 스트림을 연결하려면, 보조 스트림 생성시 매개값으로 입출력 스트림을 제공하면 된다
+
+예) 바이트 입력 스트림 FileInputStream 에 InputStreamReader 보조 스트림 연결
+InputStreamReader reader = new InputStreamReader(new FileInputStream("..."));
+
+보조스트림은 또 다른 보조 스트림과 연결되어 스트림 체인으로 구성할 수 있다
+
+<출발지>-주 입력 스트림-보조 스트림1-보조 스트림2-프로그램-보조 스트림2-보조 스트림1-주 출력 스트림-<도착지>
+
+예) 문자 변환 보조 스트림(InputStreamReader)에 BufferedReader 보조 스트림 연결
+InputStreamReader reader = new InputStreamReader(new FileInputStream("..."));
+BufferedReader br = new BufferedReader(reader);
+
+자주 사용되는 보조 스트림 목록
+InputStreamReader: 바이트 스트림을 문자 스트림으로 변환
+BufferedInputStream, BufferedOutputStream, BufferedReader, BufferedWriter: 내부에 버퍼를 사용해 입출력 횟수 감소 및 오버헤드 감소로 인한 성능 향상
+DataInputStream, DataOutputStream: 기본 타입 데이터(primitive data type) 입출력
+PrintStream, PrintWriter: 줄바꿈 처리 및 형식화된 문자열 출력
+ObjectInputStream, ObjectOutputStream: 객체 입출력
+----------------------------------------------------------------------------------------------------
+<문자 변환 스트림>
+바이트 스트림(InputStream, OutputStream)에서 입출력할 데이터가 "문자"라면 문자 스트림(Reader, Writer)로 변환해서 사용하는 것이 좋다
+    - 바이트스트림은 데이터를 단순히 바이트(byte)의 연속으로 취급하므로 문자가 어떻게 인코딩되어 있는지 정보를 알지 못함
+    - 따라서 바이트 스트림으로 문자를 읽고 쓸 경우, 어떤 문자 인코딩 방식으로 저장되었는지, 또 어떤 방식으로 읽어야 하는지를 프로그래머가 직접 관리해야 함
+    - 문자 스트림은 특정한 문자 인코딩 방식을 내부적으로 처리하도록 설계되어있음 그러므로 시스템의 기본 문자 인코딩을 사용하거나 특정 인코딩 방식을 지정할 수 있음
+
+InputStreamReader(보조스트림)을 사용하여 InputStream(바이트스트림) 을 Reader(문자스트림)로 변환
+...-바이트-InputStream-InputStreamReader-Reader-프로그램-문자-...
+* FileReader 는 InputStreamReader 의 자식 클래스이다 이것은 FileReader 가 내부적으로 FileInputStream 에 InputStreamReader 보조 스트림을 연결한 것이라고 볼 수 있다
+
+OutputStreamWriter(보조스트림)을 사용하여 OutputStream(바이트스트림) 을 Writer(문자스트림)로 변환
+...-문자-프로그램-OutputStreamWriter-Writer-OutputStream-바이트-...
+* FileWriter 역시 OutputStreamWriter 의 자식 클래스이다 이것은 FileWriter 가 내부적으로 FileOutputStream 에 OutputStreamWriter 보조 스트림을 연결한 것이라고 볼 수 있다
