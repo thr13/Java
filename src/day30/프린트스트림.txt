@@ -1,0 +1,16 @@
+PrintStream 과 PrintWriter 는 print(), println(), printf() 메소드를 가지고 있는 보조 스트림이다
+
+지금까지 콘솔에 출력하기 위해 System.out.println() 을 사용했는데 그 이유는 out 이 PrintStream 타입이기 떄문이다
+
+... - 프로그램 - PrintStream/PrintWriter 의 print(), println(), printf() 메소드 - OutputStream/Writer - 출력
+
+PrintStream 은 바이트 출력 스트림(OutputStream)과 연결되고
+PrintWriter 는 문자 출력 스트림(Writer)와 연결된다
+
+PrintStream ps = new PrintStream(바이트 출력 스트림);
+PrintWriter pw = new PrintWriter(문자 출력 스트림);
+----------------------------------------------------------------------------------------------------
+println() 메소드는 출력할 데이터 끝에 줄바꿈 문자 \n 을 더 추가시키기 때문에 콘솔이나 파일에서 줄바꿈이 일어난다
+print() 메소드는 줄바꿈 없이 계속해서 문자를 출력시킨다
+printf() 메소드는 형식화된 문자열(format string) 을 지원한다
+----------------------------------------------------------------------------------------------------
