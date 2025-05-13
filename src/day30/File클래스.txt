@@ -1,0 +1,61 @@
+java.io 패키지에는 File 클래스가 있고
+java.nio.file 패키지에는 Files 클래스가 있다
+
+java.nio.file 패키지의 Files 클래스는 java.io 패키지의 File 을 개선한 클래스로 더 많은 기능을 가지고 있다
+----------------------------------------------------------------------------------------------------
+<File 클래스>
+java.io 패키지에 존재하는 File 클래스 객체 생성은 아래와 같다
+예) File file = new File("경로");
+
+경로 구분자는 운영체제마다 다르다
+윈도우는 \\ 또는 / 를 둘 다 사용할 수 있고
+맥OS 및 리눅스는 / 를 사용한다
+
+예) 윈도우에서 File 객체 생성
+File windowFile = new File("C:/temp/file.txt"); 또는 File file = new File("C:\\temp\\file.txt");
+예) 맥OS 에서 File 객체 생성
+File macFile = new File("/Users/사용자이름/Documents/file.txt");
+예) 리눅스 에서 FIle 객체 생성
+File linuxFile = new File("/home/사용자이름/data/file.txt");
+----------------------------------------------------------------------------------------------------
+File 객체를 생성했다고 해서 파일 또는 디렉토리가 바로 생성되는게 아니다
+그리고 경로에 실제 파일이나 디렉토리가 없더라도 예외가 발생하지 않는다
+
+만약, 파일이나 디렉토리가 실제로 존재하는지 확인하고 싶다면 File 객체를 생성하고 나서 exists() 메소드를 호출하면 된다
+(파일이나 폴더 존재시 true 리턴)
+
+exists() 메소드가 false 를 리턴할 경우(파일이나 폴더가 존재하지 않을 경우) 아래의 메소드로 파일 또는 폴더를 생성할 수 있다
+
+createNewFile(): 새로운 파일을 생성
+mkdir(): 새로운 디렉토리를 생성(호출시 경로에 상위 디렉토리가 존재해야됨)
+mkdirs(): 경로상에 없는 모든 디렉토리 생성(상위 디렉토리 포함)
+
+
+exists() 메소드가 true 를 리턴할 경우(파일이나 폴더가 실제로 존재하는 경우) 사용가능한 메소드 목록
+delete(): 파일 또는 디렉토리 삭제
+
+canExecute(): 실행할 수 있는 파일인지 여부를 리턴
+canRead(): 읽을 수 있는 파일인지 여부를 리턴
+canWrite(): 수정 및 저장할 수 있는 파일인지 여부를 리턴
+
+getName(): 파일의 이름을 String 타입으로 리턴
+getParent(): 부모 디렉토리를 String 타입으로 리턴
+getParentFile(): 부모 디렉토리를 File 객체로 생성 후 리턴
+getPath(): 전체 경로를 String 타입으로 리턴
+
+isDirectory(): 디렉토리인지 여부를 리턴
+isFile(): 파일인지 여부를 리턴
+isHidden(): 숨김 파일인지 여부를 리턴
+
+lastModified(): 마지막 수정 날짜 및 시간을 long 타입으로 리턴
+length(): 파일의 크기를 long 타입으로 리턴
+
+list(): 디렉토리에 포함된 파일 및 하위 디렉토리 목록을 전부 String 배열로 리턴
+list(FilenameFilter filter): 디렉토리에 포함된 파일 및 하위 디렉토리 목록 중에 FilenameFilter 에 맞는 것만 String 배열로 리턴
+
+listFiles(): 디렉토리에 포함된 파일 및 하위 디렉토리 목록을 전부 File 배열로 리턴
+listFiles(FilenameFilter filter): 디렉토리에 포함된 파일 및 하위 디렉토리 목록 중에 FilenameFilter 에 맞는 것만 File 배열로 리턴
+----------------------------------------------------------------------------------------------------
+* 입출력 스트림을 생성할때 File 객체를 사용하면 경로 정보를 제공할 수 있다
+예1) FileInputStream fis = new FileInputStream("경로정보");
+예2) File file = new File("경로정보"); FileInputStream fis = new FileInputStream(file);
