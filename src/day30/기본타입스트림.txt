@@ -1,0 +1,12 @@
+바이트 스트림(InputStream, OutputStream)에 DataInputStream, DataOutputStream 과 같은 보조 스트림을 연결하면
+기본 타입(primitive type)인 boolean, char, short, int, long, float, double 값을 출력할 수 있다
+
+출발지-...-바이트-InputStream-DataInputStream-프로그램(기본 데이터 타입)-DataOutputStream-OutputStream-바이트-...-도착지
+
+DataInputStream dis = new DataInputStream(바이트 입력 스트림);
+DataOutputStream dos = new DataOutputStream(바이트 출력 스트림):
+----------------------------------------------------------------------------------------------------
+DataInputStream 과 DataOutputStream 은 readXxx(), readUTF(), writeXxx(), writeUTF(String str) 메소드를 제공한다
+
+*주의사항: 데이터 타입의 크기가 다르므로 DataOutputStream 으로 출력한 데이터를 다시 DataInputStream 으로 읽어 올 때에는 출력한 순서와 동일한 순서로 읽어야한다
+예) 출력순서가 int-boolean-double 인 경우 읽을 때의 순서도 int-boolean-double 이어야 한다
