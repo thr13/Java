@@ -1,0 +1,53 @@
+<TCP Networking>
+프로그램들이 IP 주소로 통신할 때, 약속된 데이터 전송 규약이 있다
+이를 전송용 프로토콜(Protocol)이라고 부른다
+
+인터넷에서 전송용 프로토콜은 TCP(Transmission Control Protocol)와 UDP(User Datagram Protocol)가 있다
+
+TCP 는 연결형 프로토콜로, 상대방과 연결된 상태에서 데이터를 주고받는다
+클라이언트가 연결 요청을 하고 서버가 연결을 수락한 경우, 통신 회선이 고정되고 데이터는 고정 회선을 통해 전달된다
+그러므로 TCP 는 보낸 데이터가 순서대로 전달되며 데이터 손실이 발생하지 않는다
+
+TCP 는 IP 와 함께 사용되어 TCP/IP 라고도 부른다
+TCP 는 웹 브라우저가 웹 서버에 연결할 때 사용되며, 이메일 전송, 파일 전송, DB 연동에도 TCP 가 사용된다
+
+JAVA 는 TCP 네트워킹을 위해 java.net 패키지에 ServerSocket 과 Socket 클래스가 제공된다
+ServerSocket 은 클라이언트의 연결을 수락하는 서버쪽 클래스이고
+Socket 은 클라이언트쪽에서 연결 요청할 때 그리고 클라이언트와 서버 양쪽에서 데이터를 주고받을 때 사용되는 클래스이다(클라이언트, 서버 둘다 Socket 을 가지고 있음)
+
+ServerSocket 을 생성할 때, 서버는 바인딩할 Port 번호를 지정해야 한다
+서버가 실행되면 클라이언트는 Socket 을 이용해 서버의 IP 주소와 Port 번호로 연결 요청을 할 수 있다
+ServerSocket 은 accept() 메소드를 호출하여 클라이언트의 요청을 연결 및 수락을 할 수 있고 통신용 Socket 을 생성한다
+이후 클라이언트와 서버는 양쪽의 Socket 을 이용해서 데이터를 주고받는다
+----------------------------------------------------------------------------------------------------
+<TCP Server>
+TCP 서버 프로그램을 개발할려면 우선 ServerSocket 객체를 생성해야 한다
+예) ServerSocket serverSocket = new ServerSocket(50001); // 50001 번 Port 에 바인딩하는 ServerSocket 객체 생성
+
+ServerSocket 을 생성하는 또 다른 방법으로는 ServerSocket 기본 생성자로 객체를 생성한 다음
+Port 바인딩을 위해 bind(InetSocketAddress 객체) 메소드를 호출하는 방법이 있다
+예) ServerSocket serverSocket = new ServerSocket();
+serverSocket.bind(new InetSocketAddress(50001));
+
+만약 서버 컴퓨터에 여러 개의 IP 가 할당되어 있을 경우, 특정 IP 에서만 서비스를 하고 싶다면 InetSocketAddress 의 첫 번째 매개값으로 해당 IP 를 주면 된다
+serverSocket.bind(new InetSocketAddress("xxx.xxx.xxx.xxx", 50001);
+
+Port 가 이미 다른 프로그램에서 사용 중일 경우 BindException 예외가 발생한다
+이 경우 다른 Port 로 바인딩하거나 Port 를 사용 중인 프로그램을 종료하고 다시 실행하면 된다
+
+ServerSocket 에 Port 바인딩이 성공했다면 (클라이언트의) 연결 요청을 수락하기 위해 accept() 메소드를 실행해야 한다
+accept() 메소드는 클라이언트가 연결 요청하기 전까지 블로킹 된다
+* 블로킹이란 실행을 멈춘 상태가 되는 것을 의미한다
+
+클라이언트의 연결 요청이 들어오면, 블로킹이 해제되고 통신용 Socket 을 리턴한다
+Socket socket = serverSocket.accept();
+
+리턴된 Socket 을 통해 연결된 클라이언트의 IP 주소와 Port 번호를 얻을려면 getRemoteSocketAddress() 메소드를 호출하여 InetSocketAddress 를 얻은 다음
+getHostString() 과 getPort() 메소드를 호출하면 된다
+
+InetSocketAddress isa = (InetSocketAddress) socket.getRemoteSocketAddress();
+String clientIp = isa.getHostString(); // 클라이언트의 IP 주소를 문자열로 리턴
+String portNo = isa.getPort(); // 클라이언트의 Port 번호를 문자열로 리턴
+
+서버를 종료하기 위해선 ServerSocket 의 close() 메소드를 호출해서 Port 번호를 언바인딩 시켜야한다
+Port 번호가 언바인딩 되어야만 다른 프로그램에서 해당 Port 번호를 재사용할 수 있다

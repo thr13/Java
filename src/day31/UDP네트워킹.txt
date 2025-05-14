@@ -1,0 +1,56 @@
+<UDP Networking>
+UDP(User Datagram Protocol)는 발신자가 수신자에게 일방적으로 데이터를 보내는 방식이다
+TCP 처럼 클라이언트 요청 및 서버의 요청수락 과정이 없기 때문에 상대적으로 UDP 는 TCP 보다 전송속도가 빠르다
+
+UDP 는 TCP 처럼 고정 회선이 아니라 여러 회선을 통해 데이터가 전송되기 떄문에
+특정 회선의 속도에 문제가 있어 데이터가 순서대로 전달되지 않거나 잘못된 회선으로 인해 데이터 손실이 발생할 수 있다
+
+실시간 영상 스트리밍같이 한 컷 정도 영상이 손실되더라도 지속적으로 수신되는 서비스는 UDP 가 문제가 되지 않는다
+그러므로 데이터 전달 신뢰성이 중요하면 TCP 를 사용하고, 데이터 전달 신뢰성보다 데이터 전송 속도가 중요하다면 UDP 를 사용하는게 좋다
+
+JAVA 는 UDP 네트워킹을 위해 java.net 패키지에서 DatagramSocket 과 DatagramPacket 클래스를 제공한다
+DatagramSocket 은 발신점과 수신점에 해당하고
+DatagramPacket 은 주고받는 데이터에 해당된다
+
+[UDP 클라이언트] - DatagramSocket - DatagramPacket(여러 회선에 존재) - DatagramSocket - [UDP 서버]
+----------------------------------------------------------------------------------------------------
+<UDP 서버>
+UDP 서버를 위한 DatagramSocket 객체를 생성할때, 매개값으로 바인딩할 Port 번호를 제공해야한다
+DatagramSocket datagramSocket = new DatagramSocket(50001);
+
+UDP 서버는 클라이언트가 보낼 DatagramPacket 을 항상 받을 준비를 해야한다
+이 역할을 하는 메소드는 DatagramSocket 클래스의 receive() 메소드 이다
+
+receive(DatagramPacket 객체) 메소드는 데이터를 수신할 때까지 블로킹 되고 데이터가 수신되면 매개값으로 주어진 DatagramPacket 에 데이터를 저장한다
+
+예) DatagramPacket receivePacket = new DatagramPacket(new byte[1024], 1024);
+datagramSocket.receive(receivePacket);
+
+DatagramPacket 객체의 생성자는 DatagramPacket(수신된 데이터를 저장할 배열, 수신할 수 있는 최대 바이트 수) 이다
+* 일반적으로 첫 번째 바이트 배열의 크기를 매개값으로 준다
+
+receive(DatagramPacket) 메소드가 호출된 후, getData() 와 getLength() 메소드로 수신된 데이터와 바이트 수를 얻을 수 있따
+byte[] bytes = receivePacket.getData(); // 수신된 데이터를 byte[] 배열로 리턴
+int num = receivePacket.getLength(); // 수신된 데이터의 바이트 수를 정수형으로 리턴
+
+만약 읽은 데이터가 문자열일 경우 String 생성자를 이용해서 문자열을 얻을 수 있다
+String data = new String(bytes, 0, num, "UTF-8");
+
+반대로 UDP 서버가 UDP 클라이언트에게 처리 내용을 보내려면, UDP 클라이언트의 IP 주소와 Port 번호가 필요하다
+이는 receive() 메소드로 받는 DatagramPacket 에서 getSocketAddress() 메소드를 호출해서 얻을 수 있다
+
+예) SocketAddress socketAddress = receivePacket.getSocketAddress();
+
+SocketAddress 객체는 클라이언트로 보낼 DatagramPacket 을 생성할때, 4번쨰 맥값으로 사용된다
+DatagramPacket 생성자의 첫 번째 매개값은 바이트 배열, 두번째 매개값은 시작 인덱스, 세 번째 매개값은 보낼 바이트 수, 네 번쨰 매개값은 SocketAddress 이다
+
+예)
+String data = "처리 내용";
+byte[] bytes = data.getBytes("UTF-8");
+DatagramPacket sendPacket = new DatagramPacket(bytes, 0, bytes.length, socketAddress);
+
+그리고 DatagramPacket 를 UDP 클라이언트로 보낼 때는 DatagramSocket 클래스의 send() 메소드를 이용한다
+datagramSocket.send(DatagramPacket 객체);
+
+만약 더 이상 UDP 클라이언트 데이터를 수신하지 않고 UDP 서버 종료시
+DatagramSocket 클래스의 close() 메소드를 호출하면 된다
