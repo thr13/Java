@@ -1,0 +1,20 @@
+<TCP Client>
+클라이언트가 서버에 연결 요청을 하려면 (클라이언트의) Socket 객체를 생성할 떄, 생성자 매개값으로 서버 IP 주소와 Port 번호를 제공하면 된다
+(로컬 컴퓨터에서 구동되는 서버로 연결 요청시, IP 주소 대신에 localhost 를 사용할 수 있다)
+
+예) Socket socket = new Socket("IP", 50001);
+
+만약 서버 IP 주소 대신 도메인 이름을 사용할려면, DNS 에서 IP 주소를 검색할 수 있도록 InetAddress.getByName("도메인이름") 을 넣을 수 있다
+
+예) Socket socket = new Socket(InetAddress.getByName("domainName"), 50001);
+
+* Socket 생성과 동시에 연결 요청 하지 않고 기본생성자로 Socket 객체를 생성한 후, connect() 메소드로 연결 요청을 할 수 있다
+socket = new Socket();
+socket.connect(new InetSocketAddress("domainName", 50001));
+
+클라이언트가 서버에 연결 요청시 UnknownHostException 예외와 IOException 예외가 발생할 수 있다
+UnknownHostException 예외는 서버 IP 주소가 잘 못 표기되었을때 발생하고
+IOException 예외는 제공된 IP 와 Port 번호로 서버를 연결할 수 없을 때 발생한다
+
+서버와 연결된 후, 클라이언트에서 연결을 끊고 싶다면 Socket 객체의 close() 메소드를 호출하면 된다
+----------------------------------------------------------------------------------------------------
