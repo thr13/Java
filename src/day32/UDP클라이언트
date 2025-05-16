@@ -1,0 +1,29 @@
+<UDP Client>
+UDP 클라이언트는 UDP 서버에 요청 내용을 보내고 그 결과를 받는 역할을 한다
+UDP 클라이언트를 구현하기 위한 DatagramSocket 객체(시작점)는 기본 생성자로 만들 수 있다 (Port 번호는 자동부여)
+
+DatagramSocket datagramSocket = new DatagramSocket();
+
+또는 요청 내용을 보내기 위한 DatagramPacket 생성
+매개값으로 바이트배열, 보낼 바이트 수, UDP 서버의 IP 와 Port 번호가 담긴 InetSocketAddress() 객체
+
+String data = "요청 내용";
+byte[] bytes = data.getBytes("UTF-8"); // UTF-8 인코딩
+DatagramPacket sendPacket = new DatagramPacket(
+    bytes, bytes.length, new InetSocketAddress("localhost", 50001)
+);
+----------------------------------------------------------------------------------------------------
+생성된 DatagramPacket 을 매개값으로 해서 DatagramSocket 클래스의 send() 메소드를 호출하면
+UDP 클라이언트에서 UDP 서버로 DatagramPacket 이 전송된다
+
+datagramSocket.send(sendPacket);
+----------------------------------------------------------------------------------------------------
+UDP 클라이언트는 UDP 서버에서 처리 결과가 언제 올지 모르기 때문에
+항상 받을 준비를 해야한다 그러므로 UDP 클라이언트는 receive() 메소드를 호출해야한다
+
+receive() 메소드는 데이터를 수신할 때까지 블로킹되고
+데이터가 수신되면 매개값으로 주어진 DatagramPacket 에 저장한다
+----------------------------------------------------------------------------------------------------
+UDP 서버와 통신을 끊기 위해서는 DatagramSocket 을 닫아야한다
+이는 DatagramSocket 클래스의 close() 메소드를 호출하면 된다
+----------------------------------------------------------------------------------------------------
