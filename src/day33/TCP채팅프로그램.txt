@@ -1,0 +1,14 @@
+<TCP 채팅 프로그램>
+채팅 프로그램은 채팅 서버와 채팅 클라이언트로 이뤄져있다
+채팅 서버를 담당할 클래스는 ChatServer
+채팅 클라이언트를 담당한 클래스는 ChatClient
+
+1. ChatClient 에서 ChatServer 의 ServerSocket 으로 연결요청 (서버 IP와 포트번호)
+2. ServerSocket 에서 accept() 메소드를 호출해서 클라이언트의 연결요청을 수락함
+3. ChatServer 에서 수락된 요청은 SocketClient 의 Socket 에 들어감
+4. ChatServer 의 SocketClient 는 ChatClient 와 통신한다
+
+ChatServer: 채팅 서버 실행 클래스, ServerSocket 생성 및 50001 Port 에 바인딩, ChatClient 연결 수락 후 SocketClient 생성
+ChatClient: 채팅 클라이언트 실행 클래스, ChatServer 에 연결요청, SocketClient 와 1:1 통신
+SocketClient: ChatClient 와 1:1 통신
+----------------------------------------------------------------------------------------------------
