@@ -1,0 +1,37 @@
+<데이터 저장>
+JDBC 에서 INSERT 문은 테이블에 속성값을 추가하는데 사용된다
+예) users 테이블에 새로운 사용자를 저장
+INSERT INTO users (userid, username, userpassword, userage, useremail)
+VALUES ('winter', '한겨울', '12345', 25, 'winter@mycompany.com')
+
+여기서 VALUES () 매개변수 값을 ?(와일드카드)로 대체하고 INSERT 문을 String 타입으로 바꾸면 아래와 같다
+
+String sql = new StringBuilder()
+.append("INSERT INTO users (userid, username, userpassword, userage, useremail) ")
+.append("VALUES (?, ?, ?, ?, ?)")
+.toString();
+
+또는
+
+String sql =
+"" +
+"INSERT INTO users (userid, username, userpassword, userage, useremail) " +
+"VALUES (?, ?, ?, ?, ?)";
+----------------------------------------------------------------------------------------------------
+매개변수화된 SQL 문을 실행하려면 PreparedStatement 객체가 필요하다.
+Connection 클래스의 prepareStatement() 메소드로부터 PreparedStatement 객체를 얻을 수 있다
+예) PreparedStatement pstmt = conn.prepareStatement(sql);
+
+그리고 PreparedStatement 의 Setter() 메소드를 이용해서 ? 에 들어갈 값을 지정할 수 있다
+? 는 순서에 따라서 1번부터 번호가 부여된다
+첫 번쨰 매개변수에는 ?의 순번을, 두 번째 매개변수에는 값을 지정해준다
+예) pstmt.setString(1,"winter"); pstmt.setString(2, "한겨울");
+
+값을 지정한 후 PreparedStatement 의 executeUpdate() 메소드를 호출하면 SQL 문이 실행되고,
+users 테이블에 행 1개(데이터)가 저장된다.
+executeUpdate() 메소드는 저장된 행 수를 정수형으로 리턴한다
+PreparedStatement 객체도 더 이상 사용하지 않을 경우 close() 메소드를 호출해 사용했던 메모리르 해제시켜야한다
+----------------------------------------------------------------------------------------------------
+PreparedStatement 객체를 얻을 때, 매개변수로 sql 실행문과 key 값을 가져올 수 있다
+예) PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
