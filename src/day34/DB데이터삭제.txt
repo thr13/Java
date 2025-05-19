@@ -1,0 +1,21 @@
+<DB 데이터 삭제>
+JDBC 를 이용한 DELETE 문을 실행하는 방법은 INSERT, UPDATE 문과 비슷하다
+
+DELETE 문
+DELETE FROM 테이블이름 WHERE 속성이름=값
+
+이떄 조건절(WHERE 문) 의 값을 ? 로 대체하고 String 타입으로 변경하면
+String sql = "DELETE FROM boards WHERE bwriter=?";
+매개변수화된 DELETE 문을 얻을 수 있다
+
+prepareStatement() 메소드를 이용하여 PreparedStatement 객체를 얻고
+? 에 값을 지정한 후, executeUpdate로 SQL문을 실행할 수 있다
+
+예)
+String sql =
+"DELETE FROM boards WHERE bwriter=?";
+PreparedStatement pstmt = conn.prepareStatement(sql);
+pstmt.setString(1,
+"winter");
+int rows = pstmt.executeUpdate();
+----------------------------------------------------------------------------------------------------
