@@ -1,0 +1,22 @@
+<switch 문과 레이블통과>
+switch 문 내부 레이블에 패턴이 사용되면 기본적으로 다음 레이블로 통과가 금지된다(내부에 break 문이 존재하는 것과 비슷)
+다음 레이블이 default 라면 통과할 수 있지만 레이블에 화살표(->)가 사용되면 무조건 통과가 금지된다
+
+예) 화살표 사용 X
+switch (object) {
+    case String s:
+        ...
+        break; // 다음 레이블 통과 금지 (명시적 통과 금지)
+    case Integer i:
+        ...
+        break;
+    default:
+        ...
+}
+
+예) 화살표 사용 O
+switch(object) {
+    case Integer i -> { ... } // 다음 레이블 통과 금지
+    case String s -> { ... } // 다음 레이블이 default 여도 통과 금지
+    default -> { ... }
+}
