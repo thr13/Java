@@ -1,0 +1,44 @@
+<순차 컬렉션>
+기존 컬렉션 프레임워크는 순서를 갖는 컬렉션들의 공통 상위 인터페이스가 없기 떄문에 순서가 존재하는 컬렉션들이 흩어져 있었다
+대표적인 예로 Collection 하위에는 순서가 있는 List, 순서가 없는 Set 이 있다.
+또 순서가 없는 Set 하위에는 순서가 있는 SortedSet 이 있고 순서가 없는 HashSet 이 있다
+---
+자바 21 버전는 순서가 있는 컬렉션을 묶고 공통 API 를 제공할 목적으로 순차 컬렉션(Sequenced Collection), 순차 셋(SequencedSet), 순차 맵(SequencedMap) 인터페이스를
+추가하고 기존 인터페이스의 상속 관계가 수정되었다
+---
+<SequencedCollection 메소드>
+SequencedCollection 은 순서가 있는 List 와 순서가 있는 Set 들(SortedSet, LinkedHashSet, NavigableSet)의 최상위 인터페이스이다
+
+addFirst(E e): 첫 번쨰 요소로 추가
+addLast(E e): 마지막 요소로 추가
+getFirst(): 첫 번쨰 요소를 가져오기
+getLast(): 마지막 요소를 가져오기
+removeFirst(): 첫 번째 요소를 제거하기
+removeLast(): 마지막 요소를 제거하기
+reversed(): 요소의 순서를 뒤집음 * 리턴타입이 SequencedCollection<E>
+---
+<순차 Set>
+순차 Set 은 순서가 존재하고 요소의 중복 저장을 허용하지 안흔다
+그리고 순차 Set 은 SequencedCollection 자식인 SequencedSet 인터페이스를 별도로 상속받는다
+메소드는 그대로 물려받지만 reverse() 메소드는 리턴 타입이 SequencedSet<E> 로 변경되었다
+
+SequencedSet 의 자식인 SortedSet 을 구현한 TreeSet 클래스는
+Comparable 또는 Comparator 를 이용해 요소들을 비교한 후 위치가 결정되고 저장되기 떄문에
+addFirst(), addLast() 와 같은 메소드로 직접 해당 위치에 요소를 저장할 수 없다 (해당 메소드 사용시 UnsupportedOperationException 예외 발생)
+단, 직접 순서를 지정하여 제거 가능
+---
+<순차 Map>
+SequencedMap 은 순서가 있는 Map 컬렉션의 최상위 인터페이스이다
+SequencedMap 에서 순서는 키의 순서를 의미한다
+
+SequencedMap 의 자식인 SortedMap 을 구현한 TreeMap 는
+Comparable 또는 Comparator 를 이용해 키들을 비교한 후 위치가 결정되고 저장되기 떄문에
+putFirst(), putLast() 메소드를 사용해서 직접 해당 위치에 엔트리를 저장할 수 없다 (해당 메소드 상용시 UnsupportedOperationException 예외 발생)
+---
+<불변 순차 컬렉션>
+자바 21 버전에서 요소를 변경할 수 없도록, 수정할 수 없는 순차 컬렉션을 만들기 위해 Collections 클래스에 정적 메소드가 추가되었다
+Collections.unmodifiableSequencedCollection(sequencedCollection)
+Collections.unmodifiableSequencedSet(sequencedSet)
+Collections.unmodifiableSequencedMap(sequencedMap)
+등 Collections 에 unmodifiableSequencedXxx() 메소드들이 정의되어 있다
+이 메소드들은 원본 컬렉션 객체의 요소들을 불변 복제 컬렉션으로 만들어 리턴한다

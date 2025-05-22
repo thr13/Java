@@ -3,7 +3,7 @@ package src.day36;
 import java.util.Date;
 
 // JAVA 8, 11
-public class SwitchPattenExample3 {
+public class SwitchPatternExample3 {
     public static void method1(Object obj) {
         if (obj == null) {
             System.out.println("unknown 입니다");
