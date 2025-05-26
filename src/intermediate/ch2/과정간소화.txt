@@ -1,0 +1,47 @@
+<복잡한 과정 간소화>
+앞의 동작파라미터화에서 filterApples() 메서드로 새로운 동작음ㄹ 전달할려면 ApplePredicate 인터페이스를 구현하는
+여러 클래스를 정의한 다음에 인스턴스화 해야한다 이는 상당히 번거운 작업이며 시간 낭비다
+
+이를 해결하기 위해 자바는 클래스 선언과 인스턴스화를 동시에 수행할 수 있도록 익명 클래스(anonymous class)라는 기법을 제공한다
+---
+<익명 클래스 anonymous class>
+    - 익명 클래스는 자바의 지역 클래스와 비슷한 개념이다
+    - 말 그대로 이름이 없는 클래스이다
+    - 익명 클래스는 클래스 선언과 인스턴스화를 동시에 할 수 있다 즉, 필요한 구현을 즉석에서 만들어서 사용할 수 있다
+아래는 익명 클래스를 이요해서 ApplePredicate 를 구현하는 객체를 만드는 방법으로 필터링 예제를 다시 구현한 코드다
+
+List<Apple> redApples = filterApples(inventory, new ApplePredicate() {
+    // filterApples() 메서드의 동작을 직접 파라미터화
+    public boolean test(Apple apple) {
+        return RED.equals(apple.getColor());
+    }
+}
+
+익명 클래스도 아직 부족한 점이 있다 왜냐하면 익명 클래스는 여전히 반복되어 코드의 많은 공간을 차지하기 떄문이다
+
+코드의 장황함은 나쁜 특성이다. 좋은 코드는 한눈에 이해할 수 있어야 한다
+코드 조각(여기선 선택 기준을 가리키는 boolean 표현식)을 전달하는 과정에서
+결국 객체를 만들고 명시적으로 새로운 동작을 정의하는 메서드(Predicate 의 test() 메서드)를 구현해야 한다는 점은 변하지 않는다
+---
+자바8의 람다 표현식을 이용해 위 코드를 간단하게 재구현할 수 있다
+List<Apple> result = filterApples(inventory, (Apple apple) -> RED.equals(apple.getColor()));
+이로써 코드의 간결함와 유연성을 챙길 수 있게 되었다
+
+람다 표현식을 리스트 형식으로 추상화 적용 예시)
+
+public interface Predicate<T> {
+    boolean test(T t);
+}
+
+public static <T> List<T> filter(List<T> list, Predicate<T> p) {
+        List<T> result = new ArrayList<>();
+        for (T e : list) {
+            if (p.test(e)) {
+                result.add(e);
+            }
+        }
+        return result;
+    }
+
+List<Apple> redApples = filter(inventory, (Apple apple) -> RED.equals(apple.getColor()));
+List<Integer> evenNumbers = filter(numbers, (Integer i) -> i % 2 == 0);
