@@ -1,0 +1,57 @@
+<3.3 람다 활용: 실행 어라운드 패턴>
+데이터베이스의 파일 처리와 같은 자원처리에 사용하는 순환 패턴(recurrent pattern)은 자원을 열고, 처리한 다음, 자원을 닫는 순서로 이뤄진다
+설정(setup)과 정리(cleanup)과정은 대부분 비슷하다
+즉, 실제 자원을 처리하는 코드를 설정(초기화/준비)과 정리(마무리) 두 과정이 둘러쌓인 형태를 가진다
+
+실행 어라운드 패턴(Execute Around Pattern)은 주로 자원 관리와 같이 공통적으로 반복되는
+설정(setup) 및 정리(cleanup) 작업 사이에실제 핵심 로직(작업)을 수행하도록 설계하는 패턴이다
+
+<3.3.1 동작 파라미터화>
+public String processFile() throws IOException {
+    try (BufferedReader br = new BufferedReader(new FileReader("data.txt"))) { // 파일에서 한 행을 읽는 행(try-with-resources 구문은 자원을 명시적으로 닫을 필요가 없음)
+        return br.readLine(); // 실제 필요한 작업을 처리하는 행
+    }
+}
+
+위 코드는 현재 파일에서 한 번에 한 줄만 읽을 수 있다
+만약 한번에 두 줄을 읽거나 가장 자주 사용되는 단어를 반환하려면 어떻게 해야할까?
+기존 설정과 정리 과정은 재사용하고 processFile() 메서드만 다른 동작을 수행하도록 명령할 수 있다면 좋을 것이다
+이는 processFile()의 동작을 파라미터화 하는 것이다
+즉, processFile() 메서드가 BufferedReader 를 이용해서 다른 동작을 수행할 수 있도록 processFile() 메서드로 동작을 전달해야한다
+
+람다를 이용하면 동작을 전달할 수 있다
+processFile() 메서드가 한 번에 두 행을 읽게 하려면 BufferedReader 를 인수로 받아서 String 을 반환하는 람다가 필요하다
+String result = processFile((BufferedReader br) -> br.readLine() + br.readLine());
+
+<3.3.2 함수형 인터페이스를 이용해서 메서드 동작 전달>
+람다는 함수형 인터페이스 자리에 들어갈 수 있다
+따라서 BufferedReader -> String 과 IOException 을 던질(throw) 수 있는 시그니처와 일치하는 함수형 인터페이스를 만들어야 한다
+이 인터페이스를 BufferedReaderProcessor 라고 정의한다
+
+@FunctionalInterface
+public interface BufferedReaderProcessor {
+    String process(BufferedReader b) throws IOException;
+}
+
+정의한 인터페이스를 processFile() 메서드의 인수로 전달할 수 있다
+public String processFile(BufferedReaderProcessor p) throws IOException { ... }
+
+<3.3.3 동작 실행>
+이제 BufferedReaderProcessor 에 정의된 process() 메서드의 시그니처(BufferedReader -> String) 과 일치하는 람다를 전달할 수 있다
+람다 표현식으로 함수형 인터페이스의 추상 메서드 구현을 직접 전달할 수 있으며
+전달된 코드는 함수형 인터페이스의 인스턴스로 전달된 코드와 같은 방식으로 처리한다
+따라서 processFile 바디 내, BufferedReaderProcessor 객체의 process 를 호출할 수 있다
+
+public String processFile(BufferedReaderProcessor p) throws IOException {
+    try(BufferedReader br = new BufferedReader(new FileReader("data.txt"))) {
+        return p.process(br); // BufferedReaderProcessor 객체의 메서드 process() 를 호출해서 BufferedReader 객체를 처리함
+    }
+}
+
+<3.3.4 람다 전달>
+동작 파라미터화가 완료되었으므로 람다를 이용해서 다양한 동작을 processFile() 메서드로 전달할 수 있다
+예1) 한 행을 처리하는 코드
+String oneLine = processFile((BufferedReader br) -> br.readLine());
+
+예2) 두 행을 처리하는 코드
+String twoLines = processFile((BufferedReader br) -> br.readLine() + br.readLine());
