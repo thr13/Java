@@ -1,0 +1,32 @@
+<3.6 메서드 참조>
+메서드 참조를 이용하면, 기존 메서드 정의를 재활용하여 람다처럼 전달할 수 있다
+예) 기존 방식의 람다 사용
+inventory.sort((Apple a1, Apple a2) -> a1.getWeight().compareTo(a2.getWeight()));
+예) 메서드 참조 사용
+inventory.sort(comparing(Apple::getWeight));
+
+<3.6.1 메서드 참조 만드는 방법>
+메서드 참조를 이용하면 기존 메서드 구현으로 람다 표현식을 만들 수 있다(이때, 명시적으로 메서드명을 참조하면 코드 가독성이 높아진다)
+메서드 참조는 클래스명::메서드명 형식으로, 메서드명 앞에 구분자(::)를 붙여서 사용한다
+예를 들어 Apple::getWeight 는 Apple 클래스에 정의된 getWeight() 메서드의 메서드 참조다
+* 실제로 메서드를 호출하는 것이 아니므로 괄호는 필요 없다
+
+결과적으로 메서드 참조는 람다 표현식 (Apple a) -> a.getWeight()를 축약한 것이다
+메서드 참조는 새 기능이 아닌, 하나의 메서드를 참조하는 람다를 편리하게 표현할 수 있는 문법이다
+
+메서드 참조는 정적 메서드 참조, 다양한 형식의 인스턴스 메서드 참조, 기존 객체의 인스턴스 메서드 참조 이 3 유형으로 구분될 수 있다
+이 중 기존 객체의 인스턴스 메서드 참조의 예시로 Transaction 객체를 할당받는 expensiveTransaction 지역 변수가 있을 때,
+Transaction 객체에는 getValue 메서드가 있다면 이를 expensiveTransaction::getValue 라고 표현할 수 있다
+이런 메서드 참조 유형은 람다 표현식에서 현존하는 외부 객체의 메서드를 호출할 떄 사용된다
+특히 비공개 헬퍼 메서드를 정의한 상황에서 유용하게 활용할 수 있다
+
+예) 헬퍼 메서드 정의 예제
+private boolean isValidName(String string) {
+    return Character.isUpperCase(string.charAt(0));
+}
+위 헬퍼 메서드는 Predicate<String> 을 필요로하는 상황에서 메서드 참조를 사용할 수 있다
+filter(words, this::isValidName)
+---
+컴파일러는 람다 표현식의 형식을 검사와 비슷하게
+메서드 참조가 주어진 함수형 인터페이스와 호환하는 확인한다
+즉, 메서드 참조는 컨텍스트의 형식과 일치해야 한다
