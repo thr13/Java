@@ -1,0 +1,72 @@
+<5.4 검색과 매칭>
+특정 속성이 데이터 집합에 있는지 여부를 검색하는 데이터 처리도 자주 사용된다
+스트림 API 는 allMatch, anyMatch, noneMatch, findFirst, findAny 등 다양한 유틸리티 메서드를 제공한다
+
+<5.4.1 Predicate 가 적어도 한 요소와 일치하는지 확인>
+프레디케이트가 주어진 스트림에서 적어도 한 요소와 일치하는지 확인할 때, anyMatch() 메서드를 이용한다
+예) 메뉴에 채식요리가 있는지 확인하는 코드
+if(menu.stream().anyMatch(Dish::isVegetarian)) {
+    System.out.println("The menu is (somewhat) vegetarian friendly!!");
+}
+* anyMatch() 는 boolean 타입을 리턴하므로 최종연산 이다
+
+<5.4.2> Predicate 가 모든 요소와 일치하는지 검사>
+allMatch() 메서드는 anyMatch() 메서드와 달리 스트림의 '모든 요소'가 주어진 프레디케이트와 일치하는지 검사한다
+예) 1000 칼로리 미만 메뉴 확인
+boolean isHealthy = menu.stream()
+    .allMatch(dish -> dish.getCalories() < 1000);
+
+<noneMatch>
+noneMatch() 메소드는 allMatch()와 반대 연산을 수행한다
+noneMatch() 메소드는 주어진 프레디케이트와 일치하는 요소가 없는지 확인한다
+예) 1000 칼로리 이하 메뉴 확인
+boolean isHealthy = menu.stream()
+    .noneMatch(dish -> dish.getCalories() >= 1000);
+
+anyMatch, allMatch, noneMatch 세 메서드는 쇼트서킷(short-circuit) 기법
+즉, 자바의 &&, || 와 같은 연산을 활용한다
+---
+<쇼트서킷 평가>
+전체 스트림을 처리하지 않았더라도 결과를 반환할 수 있다
+예를 들어, 여러 and 연산으로 연결된 커다란 boolean 표현식을 평가한다고 가정하자
+표현식에서 결과가 하나라도 거짓이 나오면 나머지 표현식의 결과와 상관없이 전체 결과도 거짓이 된다
+이런 상황을 쇼트서킷(short-circuit)이라고 부른다
+allMatch, noneMatch, noneMatch, findFirst, findAny 등의 연산은 모든 스트림의 요소를 처리하지 않고도 결과를 반환할 수 있다
+즉, 원하는 요소를 찾았으면 즉시 결과를 반환할 수 있다
+마찬가지로 스트림의 모든 요소를 처리할 필요 없이 주어진 크기의 스트림을 생성하는 limit() 메서드도 쇼트서킷 연산이다
+limit() 메서드는 무한한 요소를 가진 스트림을 유한한 크기로 줄일 수 있는 유용한 연산이다
+---
+<5.4.3 요소 검색>
+findAny() 메서드는 현재 스트림에서 임의의 요소를 반환한다 그리고 finAny() 메서드를 다른 스트림 연산과 연결해서 사용할 수 있다
+예) filter() 메서드와 findAny() 메서드를 이용하여 채식요리 선택
+Optional<Dish> dish = menu.stream()
+    .filter(Dish::isVegetarian)
+    .findAny();
+
+스트림 파이프라인은 내부적으로 단일 과정으로 실행할 수 있도록 최적화된다
+즉, 쇼트서킷을 이용해서 결과를 찾는 즉시 실행을 종료한다
+---
+<Optional>
+java.util.Optional 에 존재하는 Optional<T> 클래스는 값의 존재나 부재 여부를 표현하는 '컨테이너' 클래스 이다
+전 예제에서 findAny() 의 결과로 아무 요소도 반환하지 않을 수 있다(null 반환) null 은 쉽게 에러를 일으킬 수 있으므로
+자바8 라이브러리 설계자가 Optional<T>를 만들었다
+Optional 은 값이 존재하는지 확인하고 값이 없을 때 어떻게 처리할지 강제하는 기능이다
+
+isPresent() 는 Optional 이 값을 포함하면 true 를 반환하고 값을 포함하지 않으면 false 를 반환한다
+isPresent(Consumer<T> block)은 값이 있으면 주어진 블록을 실행한다 Consumer 함수형 인터페이스는 T 형식의 인수를 받으며 void 를 반환하는 람다를 전달할 수 있다
+T get() 은 값이 존재하면 값을 반환하고 값이 없으면 NoSuchElementException 을 일으킨다
+T orElse(T other)는 값이 있으면 값을 반환하고 값이 없으면 기본값(T other)을 반환한다
+---
+<5.4.4 첫 번째 요소 찾기>
+리스트 또는 정렬된 연속 데이터로부터 생성된 스트림처럼 일부 스트림은 '논리적인 아이템 순서'가 정해져 있을 수 있다
+예) 숫자 리스트에서 3으로 나누어떨어지는 첫 번째 제곱값을 반환하는 코드
+List<Integer>someNumbers = Arrays.asList(1, 2, 3, 4, 5);
+Optional<Integer> firstSquareDivisibleByThree = someNumbers.stream()
+    .map(n -> n * n)
+    .filter(n -> n % 3 == 0)
+    .findFirst(); // 반환값 9
+---
+<findFirst 와 findAny 는 언제 사용하는가>
+병렬 실행에서는 첫 번째 요소를 찾기 어렵다
+그러므로 요소의 반환 순서가 상관없다면 병렬 스트림에서는 제약이 적은 findAny() 를 사용한다
+(findFirst 는 순서 유지의 오버헤드 떄문에 제약이 크다 반면에 findAny 는 순서에 제약이 없다)
