@@ -1,0 +1,22 @@
+<5.1 필터링>
+스트림의 요소를 선택하는 방법으로는 프레디케이트 필터링과 고유 요소 필터링 방법이 있다
+
+<5.1.1 프레디케이트 필터링>
+스트림 인터페이스는 filter() 메서드를 지원한다
+filter() 메서드는 프레디케이트(Predicate, boolean 타입을 리턴하는 함수)를 인수로 받아서 프레디케이트와 일치하는 모든 요소를 포함하는 스트림을 반환한다
+
+예) 모든 채식요리를 필터링해서 채식 메뉴 만들기
+List<Dish> vegetarianMenu = menu.stream()
+                .filter(Dish::isVegetarian) // 채식 요리인지 확인하는 메서드 참조
+                .collect(toList()); // 스트림 최종 연산
+
+<5.1.2 고유 요소 필터링>
+스트림은 고유 요소로 이루어진 스트림을 반환하는 distinct() 메서드를 지원한다
+(고유 여부는 스트림에서 만든 객체의 hashCode, equals 로 결정된다)
+
+예) 리스트의 모든 짝수를 선택하고 중복을 필터링
+List<Integer> numbers = Arrays.asList(1, 2, 1, 3, 3, 2, 4);
+numbers.stream()
+        .filter( i -> i % 2 == 0 )
+        .distinct() // 중복된 스트림 요소 제거
+        .forEach(System.out::println);

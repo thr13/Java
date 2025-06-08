@@ -1,0 +1,105 @@
+<5.8 스트림 만들기>
+일반적으로 stream() 메서드로 컬렉션에서 스트림을 얻을 수 있다 이 방법뿐만아니라 스트림을 만드는 방법은 다양하다
+
+<5.8.1 값으로 스트림 만들기>
+임의의 수를 인수로 받는 정적 메서드 Stream.of()를 이용해서 스트림을 만들 수 있다
+또는 Stream.empty() 를 이용해서 빈 스트림을 만들 수 있다
+
+예)
+Stream<String> stream = Stream.of("Modern ", "Java ", "In ", "Action ");
+stream.map(String::toUpperCase).forEach(System.out::println);
+
+Stream<String> emptyStream = Stream.empty();
+
+<5.8.2 null 이 될 수 있는 객체로 스트림 만들기>
+자바9 에서는 null 이 될 수 있는 객체를 스트림으로 만들 수 있는 Stream.ofNullable() 메소드가 추가되었다
+
+null 이 될 수 있는 객체를 포함하는 스트림값을 flatMap 과 함께 사용하기 좋다
+Stream<String> values = Stream.of("config", "home", "user")
+                .flatMap(key -> Stream.ofNullable(System.getProperty(key)));
+
+<5.8.3 배열로 스트림 만들기>
+배열을 인수로 받는 정적 메서드 Arrays.stream()을 이용해서 스트림을 만들 수 있다
+예) 기본형 int 로 이루어진 배열을 IntStream 으로 변환하기
+int[] numbers = {2, 3, 5, 7, 11, 13};
+int sum = Arrays.stream(numbers).sum();
+
+<5.8.4 파일로 스트림 만들기>
+파일을 처리하는 등 I/O 연산에 사용되는 자바의 NIO API(비블록 I/O)도 스트림 API 를 활용할 수 있다
+java.nio.file.Files 의 많은 정적 메서드가 스트림을 반환한다
+예를 들어 Files.lines 는 주어진 파일의 행 스트림을 문자열로 반환한다
+예) 파일에서 고유한 단어 수를 찾는 프로그램
+long uniqueWords = 0;
+        try(Stream<String> lines = Files.lines(Paths.get("data.txt"), Charset.defaultCharset())){
+            uniqueWords = lines.flatMap(line -> Arrays.stream(line.split(" ")))
+                    .distinct()
+                    .count();
+        } catch (IOException e) { }
+
+Files.lines 로 파일의 각 행 요소를 반환하는 스트림을 얻을 수 있다
+스트림의 소스가 I/O 자원이므로 이 메소드를 try/catch 블록으로 감쌌고 메모리 누수를 막으려면 자원을 닫아야 한다
+기존에는 finally 블록에서 자원을 닫았지만 Stream 인터페이스는 AutoCloseable 인터페이스를 구현하므로 try 블록 내 자원은 자동으로 관리된다
+line 에 split 메서드를 호출해서 각 행의 단어를 분리할 수 있다
+flatMap() 으로 각 행의 단어를 여러 스트림으로 만드는게 아닌 하나의 스트림으로 평면화했다
+그리고 distinct() 와 count() 를 연결해서 스트림의 고유 단어 수를 계산한다
+
+<5.8.5 함수로 무한 스트림 만들기>
+스트림 API 는 함수에서 스트림을 만들 수 있는 정적 메서드 Stream.iterate 와 Stream.generate 를 제공한다
+이 연산을 이용해서 무한 스트림(infinite stream) 즉, 고정된 컬렉션에서 고정된 크기로 스트림을 만든 것과 달리 크기가 고정되지 않은 스트림을 만들 수 있다
+---
+<iterate 메서드>
+예) iterate() 메서드 사용 예제
+Stream.iterate(0, n -> n + 2).limit(10).forEach(System.out::println);
+
+iterate() 메서드는 초기값과 람다를 인수로 받아서 새로운 값을 계속 생산할 수 있다
+기본적으로 iterate 는 기존 결과에 의존해서 순차적으로 연산을 수행한다
+iterate 는 요청할 때마다 값을 생산할 수 있으며 끝이 없으므로 무한 스트림을 만든다
+이러한 스트림을 언바운드 스트림(unbounded stream)이라고 표현한다
+
+자바9 의 iterate() 메소드는 Predicate 를 지원한다
+예) 0부터 시작해서 100보다 크면 숫자 생성을 중단하는 프로그램
+IntStream.iterate(0, n -> n < 100, n -> n + 4).forEach(System.out::println);
+
+iterate() 메소드는 두 번쨰 인수로 Predicate 를 받아 언제까지 작업을 수행할 것인지의 기준으로 사용한다
+또는 스트림 쇼트서킷을 지원하는 takeWhile() 을 이용할 수 있다
+IntStream.iterate(0, n -> n + 4).takeWhile(n -> n < 100).forEach(System.out::println);
+---
+<generate 메서드>
+iterate 와 달리 generate 는 생상된 각 값을 연속적을 계산하지 않는다
+generate 는 Supplier<T> 를 인수로 받아서 새로운 값을 생산한다
+예)
+Stream.generate(Math::random).limit(5).forEach(System.out::println);
+* 주의: limit(n) 메소드가 없다면 스트림은 언바운드 상태가 된다!!
+
+발행자(supplier)는 상태가 없는 메서드 이므로 나중에 계산에 사용할 어떤 값도 저장해두지 않는다
+하지만 발행자에 꼭 상태가 없어야 하는 것은 아니다
+발행자가 상태를 저장한 다음, 스트림의 다음 값을 만들 때 상태를 고칠 수도 있다
+병렬 코드에서 발행자에 상태가 있으면 안전하지 않다
+따라서 상태를 갖는 발행자는 피해야 한다
+
+예) generate() 와 발행자(supplier) 예제
+IntStream tows = IntStream.generate(new IntSupplier(){
+    public int getAsInt() {
+        return 2;
+    }
+}
+IntSupplier fib = new IntSupplier() {
+    private int previous = 0;
+    private int current = 1;
+    public int getAsInt() {
+        int oldPrevious = this.previous;
+        int nextValue = this.previous + this.current;
+        this.previous = this.current;
+        this.current = nextValue;
+        return oldPrevious;
+    }
+};
+IntStream.generate(fib).limit(10).forEach(System.out::println);
+
+generate() 메서드는 주어진 발행자(supplier)를 이용해서 2 를 반환하는 getAsInt() 메서드를 반복적으로 호출한다
+여기서 사용한 익명 클래스와 람다는 비슷한 연산을 수행하짐만 익명 클래스는 getAsInt() 메서드의 연산을 커스터마이즈할 수 있는 상태 필드를 정의할 수 있다
+그렇기 때문에 부작용이 생길 수 있다(람다는 상태를 바꾸지 않으므로 안전하다)
+위 코드에서 IntSupplier 인스턴스는 기존 피보나치 요소와 두 인스턴스 변수에 어떤 피보나치 요소가 들어있느지 추적하므로 가변(mutable)상태 객체다
+getAsInt()를 호출하면 객체 상태가 바뀌며 새로운 값을 생산한다
+iterate()를 사용했을 때는 각 과정에서 새로운 값을 생성하면서도 기존 상태를 바꾸지 않는 순순한 불변(immutable)상태를 유지했다
+* 스트림을 병렬로 처리하면서 올바른 결과를 얻으려면 불변 상태 기법을 고수해야 한다!!

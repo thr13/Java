@@ -1,0 +1,63 @@
+<5.7 숫자형 스트림>
+예) reduce() 메서드로 스트림 요소의 합을 구하는 예제
+int calories = menu.stream()
+                .map(Dish::getCalories)
+                .reduce(0, Integer::sum);
+위 코드는 박싱 비용이 숨겨져 있다 내부적으로 합계를 계산하기 전 Integer 를 기본형으로 언박싱해야한다
+
+map() 메서드는 Stream<T> 를 생성하기 때문에 sum() 메서드를 호출할 수 있다
+스트림의 요소 형식은 Integer 지만 인터페이스는 sum() 메서드가 없다
+menu 처럼 Stream<Dish> 형식의 요소만 있다면 sum 이라는 연산을 수행할 수 없기 때문이다
+
+자바에서 스트림 API 숫자 스트림을 효율적으로 처리할 수 있도록 기본형 특화 스트림(primitive stream specialization)을 제공한다
+
+<5.7.1 기본형 특화 스트림>
+자바8 에서는 3가지 기본형 특화 스트림을 제공한다
+스트림 API 는 박싱 비용을 피할 수 있도록 IntStream, DoubleStream, LongStream 을 제공한다
+각각으 ㅣ인터페이스는 숫자 스트림의 합계를 계산하는 sum, 최대값 요소를 검색하는 max 와 같이 자주 사용하는 숫자 관련 리듀싱 연산 수행 메서드를 제공한다
+또한, 필요할 때 다시 객체 스트림으로 복원하는 기능도 제공한다
+특화 스트림은 오직 박싱과정에서 일어나는 효율성과 관련 있으며 스트림에 추가 기능을 제공하지 않는다
+---
+<숫자 스트림으로 매핑>
+스트림을 특화 스트림으로 변환할 때는 mapToInt, mapToDouble, mpaToLong 3가지 메서드를 가장 많이 사용한다
+이 메서드들은 map() 메서드와 같은 기능을 수행하지만 Stream<T> 대신 특화된 스트림(IntStream, DoubleStream, LongStream)을 반환한다
+int calories = menu.stream() // Stream<Dish> 반환
+                .mapToInt(Dish::getCalories) // IntStream 반환
+                .sum();
+
+mapToInt() 메서드는 각 요리에서 모든 칼로리(Integer 형식)을 추출한 다음 IntStream 을 반환한다(주의: Stream<Integer> 아님)
+따라서 IntStream 인터페이스에서 제공하는 sum() 메서드를 이용해 칼로리 합계를 계산할 수 있다
+스트림이 비어있으면 sum() 은 기본값 0 을 반환한다
+IntStream 은 max, min, average 등 다양한 유틸리티 메서드도 지원한다
+---
+<객체 스트림으로 복원하기>
+IntStream 의 map() 연산은 int 를 인수로 받아서 int 를 반환하는 람다(IntUnaryOperator)를 인수로 받는다
+하지만 정수가 아닌 Dish 와 같은 다른 값을 반환받고 싶다면 스트림 인터페이스에 정의된 일반적인 연산을 사용해야 한다
+아래 예제처럼 boxed() 메서드를 이용해서 숫자 스트림을 일반 스트림으로 변환할 수 있다
+
+IntStream intStream = menu.stream().mapToInt(Dish::getCalories); // 스트림을 숫자스트림으로 변환
+Stream<Integer> stream = intStream.boxed(); // 숫자스트림을 스트림으로 변환
+
+일반 스트림으로 박싱할 숫자 범위의 값을 다룰 때 boxed()를 유용하게 활용할 수 있다
+---
+<기본값: OptionalInt>
+스트림에 요소가 없는 상황과 실제 값인 상황을 구분할려면, Optional 을 사용해야한다
+값이 존재하는지 여부를 가리킬 수 있는 컨테이너 클래스 Optional 은 Integer, String 등 참조 형식으로 파라미터화 할 수 있다
+또한 OptionalInt, OptionalDouble, OptionalLong 등 기본형 특화 스트림 버전도 제공된다
+
+예) OptionalInt 를 이용해서 IntStream 의 최대값 요소 찾기
+OptionalInt maxCalories = menu.stream()
+                .mapToInt(Dish::getCalories)
+                .max();
+int max = maxCalories.orElse(1); // 값이 없을 때 기본 최대값을 명시적으로 설정
+
+OptionalInt 를 이용해서 최대값이 없는 상황에서 사용할 기본값을 명시적으로 정의할 수 있다
+
+<5.7.2 숫자범위>
+프로그램에서 특정 범위의 숫자를 이용해야하는 상황이 자주 발생한다
+자바8 의 IntStream 과 LongStream 은 range(시작값, 종료값) 와 rangeClosed(시작값, 종료값) 두 정적 메소드를 제공한다
+range() 는 시작값과 종료값이 결과에 포함되지 않는 반면 rangeClosed 는 시작값과 종료값이 결과에 포함된다는 점이 다르다
+예)
+IntStream evenNumbers = IntStream.rangeClosed(1, 100)
+                .filter( n -> n%2 == 0); // 당장의 filter 는 아무 계산도 일어나지 않는다!! - 지연실행 떄문
+                System.out.println(evenNumbers.count()); // 최종 연산인 count() 이 호출될때 비로소 전체 스트림 파이프라인의 실제 계산이 실행됨
