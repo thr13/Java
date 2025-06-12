@@ -34,3 +34,28 @@ Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType = menu.stream()
 
 위에서 등장했듯이 분할이란, 특수한 종류의 그룹화이다
 partitioningBy 가 반환한 Map 구현은 참과 거짓 두 가지 key 만 포함하므로 더 간결하고 효과적이다
+
+<6.4.2 숫자를 소수와 비소수로 분할하기>
+정수 n을 인수로 받아서 2부터 n까지 자연수를 소수(prime)와 비소수(non-prime)으로 나누는 프로그램을 구현한다면
+먼저 주어진 수가 소수인지 판단하는 Predicate 를 구현하는게 편리할 것이다
+예) 소수 판별 Predicate 1
+public static boolean isPrime(int candidate) {
+        return IntStream.range(2, candidate) // 2부터 candidate 미만 사이의 자연수를 생성
+                .noneMatch(i -> candidate % i == 0); // 스트림의 모든 정수로 candidate 를 나눌 수 없으면 true 를 반환
+    }
+
+예) 소수 판별 Predicate 2 - 소수의 대상을 주어진 수의 제곱근 이하로 제한하기
+public static boolean isPrime(int candidate) {
+        int candidateRoot = (int) Math.sqrt((double) candidate);
+        return IntStream.range(2, candidateRoot)
+                .noneMatch(i -> candidate % i == 0); // 스트림의 모든 정수로 candidate 를 나눌 수 없으면 true 를 반환
+    }
+
+다음으로 n개의 숫자를 포함하는 스트림을 만든 다음, isPrime 메서드를 Predicate 로 이용하고
+partitionBy 컬렉터로 리듀스해서 숫자를 소수와 비소수로 분류할 수 있다
+public static Map<Boolean, List<Integer>> partitionPrimes(int n) {
+        return IntStream.range(2, n)
+                .boxed()
+                .collect(partitioningBy(candidate -> isPrime(candidate)));
+    }
+
