@@ -1,0 +1,36 @@
+<6.4 분할>
+분할은 분할 함수(partitioning function)라 불리는 Predicate 를 분류 함수로 사용하는 특수한 그룹화 기능이다
+분할 함수는 boolean 을 반환하므로, Map 의 key 형식은 Boolean 이다
+결과적으로 그룹화 Map 은 최대 두 개의 그룹으로 분류된다(참 아니면 거짓 값을 가짐)
+
+예) 모든 요리를 채식 요리와 채식이 아닌 요리로 분류하기
+Map<Boolean, List<Dish>> partitionedMenu =
+                menu.stream().collect(
+                        partitioningBy(Dish::isVegetarian)
+                );
+위 예제의 실행 결과는 아래와 같다
+{false=[pork, beef, chicken, prawns, salmon], true=[french fries, rice, season fruit, pizza]}
+바로 false 값을 반환하는 그룹과 true 값을 반환하는 그룹으로 분류된다
+
+또는 메뉴 리스트로 생성한 스트림을 Predicate 로 필터링한 다음, 별도 리스트에 결과를 수집해도 같은 결과를 얻을 수 있다
+List<Dish> vegetarianDishes = menu.stream().
+                filter(Dish::isVegetarian)
+                .collect(toList());
+이 경우 출력값은 [french fries, rice, season fruit, pizza] 으로 참, 거짓으로 나타내기 애매하다
+
+<6.4.1 분할의 장점>
+분할 함수가 반환하는 참, 거짓 요소의 스트림 리스트를 유지하는 것이 분할의 장점이다
+Map 에 거짓 Key 를 이용해서(Predicate 와 결과를 반전시키는 두가지 필터링 연산 적용) 채식이 아닌 모든 요리 리스트를 얻을 수 있다
+다른 방법으로는 컬렉터를 두 번째 인수로 전달할 수 있는 partitioningBy 메서드도 있다
+
+Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType = menu.stream()
+                .collect(
+                        partitioningBy(Dish::isVegetarian, groupingBy(Dish::getType))
+                );
+
+위 코드의 실행 결과는 다음과 같다 {false={FISH=[prawns, salmon], MEAT=[pork, beef, chicken]}, true={OTHER=[french fries, rice, season fruit, pizza]}}
+참 그룹과 거짓 그룹으로 나눠지나, 두 수준의 Map 결과가 된다
+채식 요리의 스트림과 채식이 아닌 요리의 스트림이 각각 요리 종류로 그룹화해서 두 수준의 Map 이 반환되었다
+
+위에서 등장했듯이 분할이란, 특수한 종류의 그룹화이다
+partitioningBy 가 반환한 Map 구현은 참과 거짓 두 가지 key 만 포함하므로 더 간결하고 효과적이다
